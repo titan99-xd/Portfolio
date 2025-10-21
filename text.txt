@@ -1,0 +1,49 @@
+portfolio/
+├─ .git/
+├─ README.md
+├─ package.json
+├─ vite.config.ts
+├─ tsconfig.json
+├─ public/
+│  └─ favicon.ico
+├─ src/
+│  ├─ main.tsx                     # entry point
+│  ├─ App.tsx
+│  ├─ index.css
+│  ├─ assets/
+│  │  └─ (images, icons)
+│  ├─ components/
+│  │  ├─ ui/
+│  │  │  ├─ Button.tsx             # reusable
+│  │  │  ├─ Card.tsx               # reusable
+│  │  │  └─ Modal.tsx              # reusable
+│  │  ├─ layout/
+│  │  │  ├─ Header.tsx
+│  │  │  └─ Footer.tsx
+│  │  ├─ ProjectCard.tsx           # uses Card (reusable)
+│  │  ├─ ImageUploader.tsx         # interactive (reusable)
+│  │  └─ ContactForm.tsx           # interactive
+│  ├─ pages/
+│  │  ├─ Home.tsx
+│  │  ├─ Projects.tsx
+│  │  ├─ ProjectDetail.tsx
+│  │  └─ Admin.tsx
+│  ├─ hooks/
+│  │  └─ useFetch.ts
+│  ├─ services/
+│  │  ├─ api.ts                     # centralized fetch/axios calls
+│  └─ styles/
+│     └─ variables.css
+├─ server/                          # backend (Express + TS optional)
+│  ├─ package.json
+│  ├─ tsconfig.json                 # optional if using TS
+│  ├─ src/
+│  │  ├─ index.ts
+│  │  ├─ routes/
+│  │  │  ├─ projects.ts
+│  │  │  └─ images.ts
+│  │  └─ controllers/
+│  └─ uploads/
+└─ db/
+   ├─ schema.sql
+   └─ seeds.sql
