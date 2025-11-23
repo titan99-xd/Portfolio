@@ -32,7 +32,7 @@ export default function About() {
             Whether it’s developing a sleek website, a practical app, or a software tool, I’m all about making technology work for people.
             Outside of coding, I’m always learning, experimenting, and thinking about how to make digital experiences better and more inclusive.
           </p>
-          <a href="mailto:abhinavgautam3166@gmail.com?subject=Career Inquiry" className="about-btn">
+          <a href="mailto:abhinavgautam3166@gmail.com?subject=General Inquiry" className="about-btn">
               <span>Get in Touch</span>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

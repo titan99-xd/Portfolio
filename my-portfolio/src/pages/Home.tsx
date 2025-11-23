@@ -37,7 +37,7 @@ export default function Home() {
             </h1>
             
             <p className="hero-subtitle">
-              Hei, I am <span className="subtitle-highlight">Abhinav Gautam, </span>,a Nepal-born developer studying ICT Engineering in Finland. My tech journey started with modding a GTA V FiveM server, which sparked my passion for coding. Since then, I’ve grown into web, mobile, and software development, always aiming to create simple, accessible, and meaningful digital solutions. I love exploring new technologies, solving problems, and building experiences that make tech easier for everyone.
+              Hei, I am <span className="subtitle-highlight">Abhinav Gautam, </span>,a Nepal-born developer studying ICT Engineering in Finland. My tech journey started with modding a GTA V FiveM server, which sparked my passion for coding. Since then, I’ve grown into web, mobile, and software development, always aiming to create simple, accessible, and meaningful digital solutions.
             </p>
             
             <div className="hero-stats">
