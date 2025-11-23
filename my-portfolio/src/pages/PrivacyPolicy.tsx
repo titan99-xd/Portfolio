@@ -10,12 +10,12 @@ export default function PrivacyPolicy() {
           <div className='gradient-orb orb-2'></div>
           <div className='grid-pattern'></div>
         </div>
-        
+
         <div className='privacy-hero-container'>
           <h1 className='privacy-hero-title'>
             Privacy <span className='gradient-text'>Policy</span>
           </h1>
-          <p className='privacy-last-updated'>Last updated: November 2025</p>
+          <p className='privacy-last-updated'>Last updated: December 2025</p>
         </div>
       </section>
 
@@ -23,129 +23,123 @@ export default function PrivacyPolicy() {
         <div className='privacy-container'>
           <div className='privacy-intro'>
             <p>
-              Trinova Technology Oy ("we", "our", "us") values your privacy. 
-              This Privacy Policy explains how we collect, use, and protect personal information when you visit our website{' '}
-              <a href="https://trinovatech.fi" target="_blank" rel="noopener noreferrer">https://trinovatech.fi</a>{' '}
-              or contact us through it.
+              This Privacy Policy explains how I ("I", "me", "my website") collect, use, and protect your information when you visit my personal website{' '}
+              <a href="https://trinovatech.fi" target="_blank" rel="noopener noreferrer">https://abhinavgautam.com.np</a>{' '} 
+              or contact me through it.
             </p>
           </div>
 
           <div className='privacy-section'>
-            <h2>1. Who We Are</h2>
+            <h2>1. Who I Am</h2>
             <ul className='info-list'>
-              <li><strong>Company name:</strong> Trinova Technology Oy</li>
-              <li><strong>Business ID (Y-tunnus):</strong> 3567279-8</li>
-              <li><strong>Registered office:</strong> Helsinki, Finland</li>
-              <li><strong>Email:</strong> <a href="mailto:info@trinovatech.fi">info@trinovatech.fi</a></li>
+              <li><strong>Name:</strong> Abhinav Gautam</li>
+              <li><strong>Website:</strong> https://abhinavgautam.com.np</li>
+              <li><strong>Email:</strong> <a href="mailto:abhinavgautam3166@gmail.com">abhinavgautam3166@gmail.com</a></li>
+              <li><strong>Location:</strong> Helsinki, Finland</li>
             </ul>
-            <p>We are a Finland-registered software company offering IT and digital development services.</p>
+            <p>This is my personal portfolio website where I share my work, skills, and projects.</p>
           </div>
 
           <div className='privacy-section'>
-            <h2>2. Information We Collect</h2>
-            <p>We may collect and process the following personal data:</p>
+            <h2>2. Information I Collect</h2>
+            <p>I only collect information necessary for communication or website performance:</p>
             <ul>
-              <li>Contact information (name, email, phone, company, message) submitted via contact forms.</li>
-              <li>Technical data such as IP address, browser type, operating system, referring URLs, and pages visited.</li>
-              <li>Cookies and analytics data used to improve site performance and understand user behaviour.</li>
+              <li>Contact form details such as your name, email, and message.</li>
+              <li>Technical data such as IP address, device type, browser, and pages visited.</li>
+              <li>Cookies used for basic functionality or anonymous analytics.</li>
             </ul>
-            <p>We do not intentionally collect sensitive personal data.</p>
+            <p>No sensitive personal data is intentionally collected.</p>
           </div>
 
           <div className='privacy-section'>
-            <h2>3. How We Use Your Information</h2>
-            <p>We process personal data only for legitimate business purposes, including:</p>
+            <h2>3. How I Use Your Information</h2>
+            <p>Your information is used only for:</p>
             <ul>
-              <li>Responding to inquiries or service requests.</li>
-              <li>Communicating about our services or partnerships.</li>
-              <li>Maintaining and improving our website performance and security.</li>
-              <li>Analysing website usage through tools such as Google Analytics.</li>
+              <li>Responding to your messages or inquiries.</li>
+              <li>Improving website performance and content.</li>
+              <li>Understanding visitor behaviour through analytics.</li>
+              <li>Ensuring website security.</li>
             </ul>
+            <p>I do not sell or use your data for advertising.</p>
           </div>
 
           <div className='privacy-section'>
-            <h2>4. Legal Basis for Processing (GDPR)</h2>
-            <p>Our processing is based on one or more of the following:</p>
+            <h2>4. Legal Basis (GDPR)</h2>
+            <p>Your data may be processed based on:</p>
             <ul>
-              <li><strong>Consent:</strong> When you voluntarily submit a contact form.</li>
-              <li><strong>Legitimate Interest:</strong> To operate and secure our website and respond to inquiries.</li>
-              <li><strong>Legal Obligation:</strong> To comply with Finnish or EU laws if required.</li>
+              <li><strong>Consent:</strong> When you submit a contact form.</li>
+              <li><strong>Legitimate interest:</strong> To operate, secure, and improve the website.</li>
             </ul>
           </div>
 
           <div className='privacy-section'>
             <h2>5. Data Retention</h2>
             <p>
-              We retain personal data only for as long as necessary to fulfil the purposes outlined above or to comply with legal obligations. 
-              Contact form data is typically kept for up to 12 months unless ongoing communication requires longer retention.
+              Messages sent through the contact form may be stored for up to 12 months unless continued communication requires longer. Analytics data may follow third-party retention cycles.
             </p>
           </div>
 
           <div className='privacy-section'>
             <h2>6. Data Sharing</h2>
-            <p>We do not sell or rent your personal information. We may share data only with:</p>
+            <p>I do not sell or rent your information. Data may only be shared with:</p>
             <ul>
-              <li>Trusted service providers (e.g., hosting, analytics, or email systems) under strict confidentiality.</li>
-              <li>Authorities, when legally required.</li>
+              <li>Hosting providers and analytics tools.</li>
+              <li>Authorities when legally required.</li>
             </ul>
-            <p>All partners are GDPR-compliant.</p>
+            <p>All third-party services follow GDPR requirements.</p>
           </div>
 
           <div className='privacy-section'>
             <h2>7. Cookies</h2>
             <p>
-              Our website may use cookies to enhance user experience and collect anonymous usage statistics. 
-              You can adjust your browser settings to refuse cookies or delete them at any time.
+              This website may use cookies for functionality, performance, and analytics. You can disable cookies through your browser settings.
             </p>
           </div>
 
           <div className='privacy-section'>
             <h2>8. Data Security</h2>
             <p>
-              We take appropriate technical and organizational measures to protect your data against loss, misuse, 
-              unauthorized access, or disclosure.
+              I take reasonable measures to protect your personal data, but no online service can guarantee complete security.
             </p>
           </div>
 
           <div className='privacy-section'>
-            <h2>9. Your Rights</h2>
-            <p>Under the EU GDPR, you have the following rights:</p>
+            <h2>9. Your Rights (GDPR)</h2>
+            <p>You have the right to:</p>
             <ul>
-              <li><strong>Access:</strong> Request a copy of your personal data.</li>
-              <li><strong>Rectification:</strong> Correct inaccurate or incomplete data.</li>
-              <li><strong>Erasure ("Right to be Forgotten"):</strong> Ask us to delete your personal data.</li>
-              <li><strong>Restriction of Processing and Data Portability.</strong></li>
-              <li><strong>Withdraw Consent</strong> at any time.</li>
+              <li>Request access to your personal data.</li>
+              <li>Request corrections to inaccurate data.</li>
+              <li>Request deletion of your data.</li>
+              <li>Withdraw consent at any time.</li>
+              <li>Request restriction or portability of your data.</li>
             </ul>
             <p>
-              To exercise these rights, contact us at{' '}
-              <a href="mailto:info@trinovatech.fi">info@trinovatech.fi</a>.
+              To exercise your rights, contact me at{' '}
+              <a href="mailto:abhinavgautam3166@gmail.com">abhinavgautam3166@gmail.com</a>.
             </p>
           </div>
 
           <div className='privacy-section'>
             <h2>10. International Data Transfers</h2>
             <p>
-              If any processing involves systems outside the EU/EEA (for example, our Nepal-based development team), 
-              we ensure that adequate data-protection safeguards (such as EU-approved Standard Contractual Clauses) are in place.
+              Some services (such as analytics or hosting) may process data outside the EU/EEA. When this occurs, appropriate safeguards such as Standard Contractual Clauses (SCCs) are applied.
             </p>
           </div>
 
           <div className='privacy-section'>
             <h2>11. Updates to This Policy</h2>
             <p>
-              We may update this Privacy Policy occasionally. The latest version will always be available on this page 
-              with an updated date.
+              This Privacy Policy may be updated occasionally. Changes will be posted on this page with an updated date.
             </p>
           </div>
 
           <div className='privacy-section'>
             <h2>12. Contact</h2>
-            <p>If you have any questions or requests regarding this Privacy Policy, please contact:</p>
+            <p>If you have questions about this Privacy Policy, contact me at:</p>
             <div className='contact-box'>
-              <p><strong>Trinova Technology Oy</strong></p>
-              <p>Email: <a href="mailto:info@trinovatech.fi">info@trinovatech.fi</a></p>
-              <p>Address: Arentikuja 1 D 291 C, Helsinki, Finland</p>
+              <p><strong>Abhinav Gautam</strong></p>
+              <p>Email: <a href="mailto:abhinavgautam3166@gmail.com">abhinavgautam3166@gmail.com</a></p>
+              <p>Location: Helsinki, Finland</p>
             </div>
           </div>
         </div>

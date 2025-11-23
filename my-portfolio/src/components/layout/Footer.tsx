@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
-import './footer.css'
-import linkedIn from '../assets/LI-In-Bug.png';
-import facebook from '../assets/Facebook_Logo_Primary.png';
-import instagram from '../assets/Instagram_Glyph_Gradient.png';
+import '../../styles/footer.css';
+import facebook from '../../assets/Facebook_Logo_Primary.png';
+import linkedIn from '../../assets/LI-In-Bug.png';
+import instagram from '../../assets/Instagram_Glyph_Gradient.png';
+import github from '../../assets/github-logo.png';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -15,22 +16,21 @@ export default function Footer() {
           {/* Company Info */}
           <div className="footer-column footer-about">
             <div className="footer-logo">
-              <span className="footer-logo-text">Trinova Technology</span>
+              <span className="footer-logo-text">Social Media</span>
             </div>
-            <p className="footer-description">
-              Finland-led. Nepal-backed. Empowering businesses with cutting-edge technology to turn digital visions into reality.
-              <br />In Partner with <a href="https://uranus-tech.com/"> Uranus Tech Nepal Pvt</a>. Ltd <br />(ISO 27001:2022 Certified Company).
-            </p>
             <div className="footer-social">
-              <a href="https://www.facebook.com/profile.php?id=61582664181309" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Facebook">
+              <a href="https://www.facebook.com/avvee18/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Facebook">
                 <img src={facebook} alt='facebook' />
               </a>
               
-              <a href="https://www.linkedin.com/company/trinova3/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">
+              <a href="https://www.linkedin.com/in/avvee18/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">
                 <img src={linkedIn} alt='LinkedIn' />
               </a>
-              <a href="https://www.instagram.com/trinovatech.oy/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Instagram">
+              <a href="https://www.instagram.com/avveenav/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Instagram">
                 <img src={instagram} alt='Instagram' />
+              </a>
+              <a href="https://github.com/titan99-xd" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GitHub">
+                <img src={github} alt='Github' />
               </a>
             </div>
           </div>
@@ -40,20 +40,19 @@ export default function Footer() {
             <h3 className="footer-heading">Quick Links</h3>
             <ul className="footer-links">
               <li><Link to="/" className="footer-link">Home</Link></li>
-              <li><Link to="/about" className="footer-link">About Us</Link></li>
+              <li><Link to="/about" className="footer-link">About Me</Link></li>
               <li><Link to="/portfolio" className="footer-link">Portfolio</Link></li>
-              <li><Link to="/careers" className="footer-link">Careers</Link></li>
+              <li><Link to="/contact" className="footer-link">Contact Me</Link></li>
               
             </ul>
           </div>
 
           {/* Services */}
           <div className="footer-column">
-            <h3 className="footer-heading">Services</h3>
+            <h3 className="footer-heading">My Experience</h3>
             <ul className="footer-links">
               <li><a href="#services" className="footer-link">Web Development</a></li>
               <li><a href="#services" className="footer-link">Mobile Apps</a></li>
-              <li><a href="#services" className="footer-link">Cloud Solutions</a></li>
               <li><a href="#services" className="footer-link">UI/UX Design</a></li>
               <li><a href="#services" className="footer-link">IT Consulting</a></li>
             </ul>
@@ -61,7 +60,7 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div className="footer-column">
-            <h3 className="footer-heading">Contact Us</h3>
+            <h3 className="footer-heading">Contact Me</h3>
             <ul className="footer-contact">
               <li className="contact-item">
                 <span className="contact-icon">
@@ -70,7 +69,7 @@ export default function Footer() {
                   </svg>
                 </span>
                 <a href="mailto:info@trinovatech.fi" className="contact-link">
-                  info@trinovatech.fi
+                  abhinavgautam3166@gmail.com
                 </a>
               </li>
               <li className="contact-item">
@@ -80,7 +79,7 @@ export default function Footer() {
                   </svg>
                 </span>
                 <a href="tel:+358407017910" className="contact-link">
-                  +358 40 701 7910
+                  +358 417425877
                 </a>
               </li>
               <li className="contact-item">
@@ -95,10 +94,6 @@ export default function Footer() {
                 </div>
               </li>
             </ul>
-            <div className="company-info-text">
-              {/* <div className="company-name">Trinova Technology Oy</div> */}
-              <div className="company-id">Y-tunnus: 3567279-8</div>
-            </div>
           </div>
         </div>
 
@@ -106,7 +101,7 @@ export default function Footer() {
         <div className="footer-bottom">
           <div className="footer-bottom-content">
             <p className="footer-copyright">
-              © {currentYear} Trinova Technology Oy. All rights reserved.
+              © {currentYear} All rights reserved.
             </p>
             <div className="footer-legal">
               <Link to="/privacy-policy" className="legal-link">Privacy Policy</Link>
