@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    // Module and target
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "ignoreDeprecations": "6.0", // silences node10 warnings
+    "target": "ES6",
+
+    // Project structure
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // ES module interop
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    // Type checking
+    "strict": true, // enables strictNullChecks and more
+    "strictNullChecks": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+
+    // Source maps & declarations
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Node environment types
+    "types": ["node"],
+
+    // JSX support (optional)
+    "jsx": "react-jsx",
+
+    // Module detection
+    "moduleDetection": "force",
+    "noUncheckedSideEffectImports": true
+  },
+
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
