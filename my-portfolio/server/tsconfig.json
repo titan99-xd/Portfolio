@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     // Module and target
-    "module": "ESNext",
+    "module": "commonjs",
     "moduleResolution": "Node",
-    "ignoreDeprecations": "6.0", // silences node10 warnings
+    "ignoreDeprecations": "6.0", // optional, silences node10 warnings
     "target": "ES6",
 
     // Project structure
@@ -12,12 +12,12 @@
 
     // ES module interop
     "esModuleInterop": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "isolatedModules": true,
 
     // Type checking
-    "strict": true, // enables strictNullChecks and more
-    "strictNullChecks": true,
+    "strict": true, // enables strict mode including strictNullChecks
+    "strictNullChecks": true, // required for exactOptionalPropertyTypes
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
@@ -30,7 +30,7 @@
     // Node environment types
     "types": ["node"],
 
-    // JSX support (optional)
+    // JSX support (if you ever share code with frontend)
     "jsx": "react-jsx",
 
     // Module detection
@@ -38,6 +38,9 @@
     "noUncheckedSideEffectImports": true
   },
 
+  // Include all TS files in src folder
   "include": ["src/**/*"],
+
+  // Exclude node_modules
   "exclude": ["node_modules", "dist"]
 }
