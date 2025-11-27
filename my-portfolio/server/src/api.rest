@@ -1,0 +1,34 @@
+### Create Admin User
+POST http://localhost:5050/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Admin",
+  "email": "titan@example.com",
+  "password": "admin123"
+}
+### Login admin
+POST http://localhost:5050/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Test protected route
+GET http://localhost:5050/api/projects
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTc2NDI2Mjc5NiwiZXhwIjoxNzY0ODY3NTk2fQ.CRM6S0jgDLazXIgExf4MBtxHWulC9saPU_jSVzKRtCw
+
+
+### Create a project
+POST http://localhost:5050/api/projects
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTc2NDI2Mjc5NiwiZXhwIjoxNzY0ODY3NTk2fQ.CRM6S0jgDLazXIgExf4MBtxHWulC9saPU_jSVzKRtCw
+
+{
+  "title": "Test Project",
+  "description": "This is a demo project",
+  "link": "https://example.com",
+  "thumbnail": "https://placehold.co/600x400"
+}
