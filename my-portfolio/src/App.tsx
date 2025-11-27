@@ -1,19 +1,35 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+// Layout
 import Header from "./components/layout/Header";
 import ScrollToTop from "./components/ScrollToTop";
 import ContactButton from "./components/ui/contact-me-btn";
 
+// Public Pages
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Portfolio from "./pages/Portfolio";
-import Blog from "./pages/blog";
 import Contact from "./pages/Contact";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
 
+// Public Blog
+import BlogList from "./pages/BlogList";
+import BlogPost from "./pages/BlogPost";
+
+// Admin & Auth
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+
+// Admin Blog Pages
+import BlogAdminList from "./pages/admin/blog/BlogList";
+import BlogCreate from "./pages/admin/blog/BlogCreate";
+import BlogEdit from "./pages/admin/blog/BlogEdit";
+
+import ProjectList from "./pages/admin/projects/ProjectList";
+import ProjectCreate from "./pages/admin/projects/ProjectCreate";
+import ProjectEdit from "./pages/admin/projects/ProjectEdit";
+
 
 import "./styles/app.css";
 
@@ -26,18 +42,22 @@ function App() {
 
       <main className="app-main">
         <Routes>
+
           {/* PUBLIC ROUTES */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
-          {/* ADMIN AUTH ROUTE */}
+          {/* PUBLIC BLOG */}
+          <Route path="/blog" element={<BlogList />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+
+          {/* ADMIN LOGIN */}
           <Route path="/admin/login" element={<AdminLogin />} />
 
-          {/* PROTECTED ADMIN ROUTE */}
+          {/* ADMIN DASHBOARD */}
           <Route
             path="/admin"
             element={
@@ -46,6 +66,62 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* ADMIN BLOG CRUD */}
+          <Route
+            path="/admin/blog"
+            element={
+              <ProtectedRoute>
+                <BlogAdminList />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/blog/new"
+            element={
+              <ProtectedRoute>
+                <BlogCreate />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/blog/:id/edit"
+            element={
+              <ProtectedRoute>
+                <BlogEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+  path="/admin/projects"
+  element={
+    <ProtectedRoute>
+      <ProjectList />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/projects/new"
+  element={
+    <ProtectedRoute>
+      <ProjectCreate />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/projects/:id/edit"
+  element={
+    <ProtectedRoute>
+      <ProjectEdit />
+    </ProtectedRoute>
+  }
+/>
+
+
         </Routes>
       </main>
     </BrowserRouter>

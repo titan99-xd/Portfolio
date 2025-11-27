@@ -4,6 +4,7 @@ import tagRoutes from "./tag.routes";
 import messagesRoutes from "./messages.routes";
 import authRoutes from "./auth.routes";
 import projectsRoutes from "./projects.routes";
+import uploadRoutes from "./upload.routes";
 
 
 // import projectsRoutes from "./projects.routes";
@@ -15,6 +16,7 @@ router.use("/tags", tagRoutes);
 router.use("/messages", messagesRoutes);
 router.use("/auth", authRoutes);
 router.use("/projects", projectsRoutes);
+router.use("/upload", uploadRoutes);
 
 
 export default router;

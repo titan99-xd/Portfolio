@@ -1,0 +1,29 @@
+.blog-post-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.blog-post-cover {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.blog-post-title {
+  font-size: 2.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-post-date {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.blog-post-content p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+  font-size: 1.05rem;
+}

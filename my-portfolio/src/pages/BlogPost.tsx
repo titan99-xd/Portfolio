@@ -1,44 +1,57 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Footer from "../components/layout/Footer";
-import "../styles/blog.css";
+import axios from "axios";
+import "../styles/blog-post.css";
+
+interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  cover_image: string | null;
+  created_at: string;
+}
 
 export default function BlogPost() {
-  const { id } = useParams();
+  const { slug } = useParams<{ slug: string }>();
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // This will be replaced with backend data later
-  const post = {
-    title: "How I Built My Portfolio with React + Vite",
-    content: `
-      Building a portfolio is an essential step for every developer...
-    `,
-    date: "Nov 24, 2025",
-    readTime: 5,
-  };
+  useEffect(() => {
+    async function fetchPost() {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/blog/${slug}`
+        );
+        setPost(res.data);
+      } catch {
+        console.error("Post not found");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPost();
+  }, [slug]);
+
+  if (loading) return <p className="blog-loading">Loading...</p>;
+  if (!post) return <p className="blog-error">Post not found.</p>;
 
   return (
-    <>
-      <section className="page-section blog-post">
-        <h1 className="blog-post-title">{post.title}</h1>
+    <article className="blog-post-container">
+      {post.cover_image && (
+        <img src={post.cover_image} alt={post.title} className="blog-post-cover" />
+      )}
 
-        <div className="blog-post-meta">
-          <span>{post.date}</span> • <span>{post.readTime} min read</span>
-        </div>
+      <h1 className="blog-post-title">{post.title}</h1>
+      <p className="blog-post-date">
+        {new Date(post.created_at).toLocaleDateString()}
+      </p>
 
-        <article className="blog-post-content">
-          <p>{post.content}</p>
-        </article>
-
-        <div className="comment-section">
-          <h3>Leave a Comment</h3>
-          <form className="comment-form">
-            <input type="text" placeholder="Your Name" required />
-            <textarea placeholder="Your Comment..." required></textarea>
-            <button type="submit">Submit Comment</button>
-          </form>
-        </div>
-      </section>
-
-      <Footer />
-    </>
+      <div className="blog-post-content">
+        {post.content.split("\n").map((line, i) => (
+          <p key={i}>{line}</p>
+        ))}
+      </div>
+    </article>
   );
 }

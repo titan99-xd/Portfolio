@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import apiRouter from "./routes/index";
 import pool from "./db/db";
+import path from "path";
 
 dotenv.config();
 
@@ -19,6 +20,9 @@ app.use("/api", apiRouter);
 app.get("/", (req, res) => {
   res.send("Backend running!");
 });
+
+// Static folder for uploads
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Server
 const PORT = process.env.PORT || 5000;
