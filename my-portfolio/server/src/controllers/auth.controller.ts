@@ -111,3 +111,4 @@ export const loginAdmin = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Failed to log in." });
   }
 };
+

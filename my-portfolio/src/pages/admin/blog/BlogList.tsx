@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import "../../styles/admin-blog.css";
+import "../../../styles/admin-blog.css";
 
 interface BlogPost {
   id: number;

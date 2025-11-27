@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/admin-login.css";
+import "../../styles/admin-login.css";
 
 export default function AdminLogin() {
   const navigate = useNavigate();

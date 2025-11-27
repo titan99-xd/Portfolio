@@ -12,35 +12,27 @@ export default function ProjectCreate() {
   const [link, setLink] = useState("");
   const [thumbnail, setThumbnail] = useState<string | null>(null);
 
-  const uploadImage = async (file: File) => {
-    const fd = new FormData();
-    fd.append("image", file);
-
-    const res = await axios.post("http://localhost:5000/api/upload", fd, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    setThumbnail(res.data.url);
-  };
-
   const createProject = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await axios.post(
+      const res = await axios.post(
         "http://localhost:5000/api/projects",
         {
           title,
           description,
           link,
-          thumbnail
+          thumbnail,
         },
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      navigate("/admin/projects");
+      const projectId = res.data.insertId || res.data.projectId;
+
+      // Redirect to edit page to upload images
+      navigate(`/admin/projects/${projectId}/edit`);
     } catch {
       alert("Failed to create project");
     }
@@ -48,7 +40,7 @@ export default function ProjectCreate() {
 
   return (
     <div className="admin-projects-form-container">
-      <h1>New Project</h1>
+      <h1>Create New Project</h1>
 
       <form onSubmit={createProject} className="admin-projects-form">
 
@@ -66,16 +58,12 @@ export default function ProjectCreate() {
         <label>Project Link</label>
         <input value={link} onChange={(e) => setLink(e.target.value)} />
 
-        <label>Thumbnail</label>
+        <label>Thumbnail URL</label>
         <input
-          type="file"
-          accept="image/*"
-          onChange={(e) =>
-            e.target.files && uploadImage(e.target.files[0])
-          }
+          placeholder="https://..."
+          value={thumbnail || ""}
+          onChange={(e) => setThumbnail(e.target.value)}
         />
-
-        {thumbnail && <img src={thumbnail} className="project-thumb-preview" />}
 
         <button className="btn-primary">Create Project</button>
       </form>
