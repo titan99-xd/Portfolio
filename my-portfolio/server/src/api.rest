@@ -1,13 +1,22 @@
-### Create Admin User
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTc2NDI2Mjc5NiwiZXhwIjoxNzY0ODY3NTk2fQ.CRM6S0jgDLazXIgExf4MBtxHWulC9saPU_jSVzKRtCw
+
+
+
+###############################################
+# AUTH
+###############################################
+
+### Register Admin (run once to create your account)
 POST http://localhost:5050/api/auth/register
 Content-Type: application/json
 
 {
   "name": "Admin",
-  "email": "titan@example.com",
+  "email": "admin@example.com",
   "password": "admin123"
 }
-### Login admin
+
+### Login Admin (receive JWT token)
 POST http://localhost:5050/api/auth/login
 Content-Type: application/json
 
@@ -16,19 +25,122 @@ Content-Type: application/json
   "password": "admin123"
 }
 
-### Test protected route
+###############################################
+# PROJECTS (Protected)
+###############################################
+
+### Get all projects
 GET http://localhost:5050/api/projects
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTc2NDI2Mjc5NiwiZXhwIjoxNzY0ODY3NTk2fQ.CRM6S0jgDLazXIgExf4MBtxHWulC9saPU_jSVzKRtCw
+Authorization: Bearer {{token}}
 
-
-### Create a project
+### Create a new project
 POST http://localhost:5050/api/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTc2NDI2Mjc5NiwiZXhwIjoxNzY0ODY3NTk2fQ.CRM6S0jgDLazXIgExf4MBtxHWulC9saPU_jSVzKRtCw
+Authorization: Bearer {{token}}
 
 {
-  "title": "Test Project",
-  "description": "This is a demo project",
+  "title": "My Test Project",
+  "description": "This is a generated project.",
   "link": "https://example.com",
   "thumbnail": "https://placehold.co/600x400"
+}
+
+### Get a single project by ID
+GET http://localhost:5050/api/projects/1
+Authorization: Bearer {{token}}
+
+### Update a project
+PUT http://localhost:5050/api/projects/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Updated Project Title",
+  "description": "Updated description",
+  "link": "https://example.com/updated",
+  "thumbnail": "https://placehold.co/600x400"
+}
+
+### Delete a project
+DELETE http://localhost:5050/api/projects/1
+Authorization: Bearer {{token}}
+
+###############################################
+# PROJECT IMAGES (Protected)
+###############################################
+
+### Upload a project image
+### NOTE: Change ":id" to your actual project ID
+POST http://localhost:5050/api/projects/1/images
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data
+
+# Replace with an actual image path on your computer
+file=@/Users/yourname/Desktop/test.png
+
+### List project images
+GET http://localhost:5050/api/projects/1/images
+Authorization: Bearer {{token}}
+
+### Delete a project image
+DELETE http://localhost:5050/api/projects/images/1
+Authorization: Bearer {{token}}
+
+###############################################
+# BLOG POSTS (Protected)
+###############################################
+
+### Get all blog posts
+GET http://localhost:5050/api/blog
+Authorization: Bearer {{token}}
+
+### Get a blog post by slug
+GET http://localhost:5050/api/blog/my-blog-slug
+Authorization: Bearer {{token}}
+
+### Create a new blog post
+POST http://localhost:5050/api/blog
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "My First Blog Post",
+  "slug": "my-first-blog-post",
+  "content": "This is the content of the blog post",
+  "cover_image": "https://placehold.co/800",
+  "author_id": 1,
+  "tags": ["react", "typescript", "mysql"]
+}
+
+### Update blog post
+PUT http://localhost:5050/api/blog/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Updated Blog Post",
+  "slug": "updated-slug",
+  "content": "Updated content",
+  "cover_image": "https://placehold.co/700"
+}
+
+### Delete blog post
+DELETE http://localhost:5050/api/blog/1
+Authorization: Bearer {{token}}
+
+###############################################
+# TAGS (Protected)
+###############################################
+
+### Get all tags
+GET http://localhost:5050/api/tags
+Authorization: Bearer {{token}}
+
+### Create a tag
+POST http://localhost:5050/api/tags
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "nextjs"
 }
