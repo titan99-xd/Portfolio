@@ -29,6 +29,8 @@ import BlogEdit from "./pages/admin/blog/BlogEdit";
 import ProjectList from "./pages/admin/projects/ProjectList";
 import ProjectCreate from "./pages/admin/projects/ProjectCreate";
 import ProjectEdit from "./pages/admin/projects/ProjectEdit";
+import AdminProjectEdit from "./pages/admin/AdminProjectEdit";
+
 
 
 import "./styles/app.css";
@@ -120,8 +122,7 @@ function App() {
     </ProtectedRoute>
   }
 />
-
-
+<Route path="/admin/projects/:id" element={<ProtectedRoute><AdminProjectEdit /></ProtectedRoute>} />
         </Routes>
       </main>
     </BrowserRouter>

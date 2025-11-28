@@ -1,109 +1,120 @@
-import Footer from '../components/layout/Footer';
-import '../styles/portfolio.css';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-// Type for project returned by backend
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  link: string | null;
-  thumbnail: string | null;
-}
+import { useEffect, useState } from "react";
+import Footer from "../components/layout/Footer";
+import "../styles/portfolio.css";
+import { getProjects, getProjectImages } from "../services/projects.api";
+import type { Project } from "../types/Project";
+import type { ProjectImage } from "../types/ProjectImage";
 
 export default function Portfolio() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [images, setImages] = useState<Record<number, string[]>>({});
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const openModal = (image: string) => setSelectedImage(image);
-  const closeModal = () => setSelectedImage(null);
-
-  // Fetch projects from backend
+  // Load all projects + images
   useEffect(() => {
-    async function loadProjects() {
+    async function load() {
       try {
-        const res = await axios.get<Project[]>("http://localhost:5000/api/projects");
-        setProjects(res.data);
+        const proj = await getProjects();
+        setProjects(proj);
+
+        const imgMap: Record<number, string[]> = {};
+
+        for (const p of proj) {
+          try {
+            const imgs: ProjectImage[] = await getProjectImages(p.id);
+            imgMap[p.id] = imgs.map(
+              (img) => `http://localhost:5050/${img.image_url}`
+            );
+          } catch {
+            imgMap[p.id] = [];
+          }
+        }
+
+        setImages(imgMap);
       } catch (err) {
-        console.error("Failed to load projects:", err);
+        console.error("Failed to load portfolio:", err);
       } finally {
         setLoading(false);
       }
     }
 
-    loadProjects();
+    load();
   }, []);
 
+  const openModal = (image: string) => setSelectedImage(image);
+  const closeModal = () => setSelectedImage(null);
+
   if (loading) {
-    return <p className="portfolio-loading">Loading projects...</p>;
+    return (
+      <div className="portfolio-loading">
+        <p>Loading portfolio...</p>
+      </div>
+    );
   }
 
   return (
-    <div className='portfolio-page'>
-      
+    <div className="portfolio-page">
       {/* Hero Section */}
-      <section className='portfolio-hero'>
-        <div className='portfolio-hero-background'>
-          <div className='gradient-orb orb-1'></div>
-          <div className='gradient-orb orb-2'></div>
-          <div className='gradient-orb orb-3'></div>
-          <div className='grid-pattern'></div>
+      <section className="portfolio-hero">
+        <div className="portfolio-hero-background">
+          <div className="gradient-orb orb-1"></div>
+          <div className="gradient-orb orb-2"></div>
+          <div className="gradient-orb orb-3"></div>
+          <div className="grid-pattern"></div>
         </div>
-        
-        <div className='portfolio-hero-container'>
-          <h1 className='portfolio-hero-title'>
+
+        <div className="portfolio-hero-container">
+          <h1 className="portfolio-hero-title">
             Portfolio
-            <span className='gradient-text'> & Case Studies</span>
+            <span className="gradient-text"> & Case Studies</span>
           </h1>
-          
-          <p className='portfolio-hero-subtitle'>
-            Explore the projects I’ve built and the ideas I’ve brought to life.
-            From web apps to mobile solutions, my portfolio highlights the skills I’ve developed
-            and the challenges I’ve solved along my journey in tech.
+
+          <p className="portfolio-hero-subtitle">
+            Explore real projects built for clients and my own startup ideas.
+            Clean, functional, and meaningful digital experiences.
           </p>
         </div>
       </section>
 
-      {/* Projects Section */}
-      <section className='projects-section'>
-        <div className='projects-container'>
+      {/* Project Cards */}
+      <section className="projects-section">
+        <div className="projects-container">
           {projects.map((project, index) => (
-            <div key={project.id} className={`project-card ${index % 2 === 0 ? 'even' : 'odd'}`}>
-              
-              {/* IMAGES — from DB: only 1 thumbnail */}
-              <div className='project-images'>
-                {project.thumbnail ? (
-                  <img 
-                    src={project.thumbnail} 
-                    alt={`${project.title} thumbnail`}
-                    onClick={() => openModal(project.thumbnail!)}
+            <div
+              key={project.id}
+              className={`project-card ${index % 2 === 0 ? "even" : "odd"}`}
+            >
+              <div className="project-images">
+                {(images[project.id] || []).map((img, idx) => (
+                  <img
+                    key={idx}
+                    src={img}
+                    alt={`${project.title} image ${idx + 1}`}
+                    onClick={() => openModal(img)}
                   />
-                ) : (
-                  <div className="no-thumbnail">No Image</div>
-                )}
+                ))}
               </div>
 
-              <div className='project-content'>
-                <h3 className='project-title'>{project.title}</h3>
+              <div className="project-content">
+                <h3 className="project-title">{project.title}</h3>
 
                 {project.link && (
-                  <p className='project-subtitle'>{project.link}</p>
+                  <p className="project-subtitle">{project.link}</p>
                 )}
 
-                <p className='project-description'>{project.description}</p>
+                <p className="project-description">{project.description}</p>
 
-                {/* Temporary features section (since DB does not have features yet) */}
-                <div className='project-features'>
-                  <h4>Main Highlights</h4>
-                  <ul>
-                    <li>Dynamic project loaded from admin dashboard</li>
-                    <li>Thumbnail uploaded via admin panel</li>
-                    <li>Rendered using real-time database data</li>
-                  </ul>
-                </div>
-
+                {project.features && (
+                  <div className="project-features">
+                    <h4>Key Features:</h4>
+                    <ul>
+                      {project.features.map((feature, idx) => (
+                        <li key={idx}>{feature}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -112,12 +123,17 @@ export default function Portfolio() {
 
       {/* Image Modal */}
       {selectedImage && (
-        <div className='image-modal' onClick={closeModal}>
-          <div className='modal-content' onClick={(e) => e.stopPropagation()}>
-            <button className='modal-close' onClick={closeModal} aria-label="Close modal">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 6L6 18M6 6l12 12"/>
-              </svg>
+        <div className="image-modal" onClick={closeModal}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="modal-close"
+              onClick={closeModal}
+              aria-label="Close modal"
+            >
+              ✕
             </button>
             <img src={selectedImage} alt="Full size view" />
           </div>
