@@ -50,7 +50,7 @@ GET http://localhost:5050/api/projects/1
 Authorization: Bearer {{token}}
 
 ### Update a project
-PUT http://localhost:5050/api/projects/1
+PUT http://localhost:5050/api/projects/6
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -71,15 +71,15 @@ Authorization: Bearer {{token}}
 
 ### Upload a project image
 ### NOTE: Change ":id" to your actual project ID
-POST http://localhost:5050/api/projects/1/images
+POST http://localhost:5050/api/projects/6/images
 Authorization: Bearer {{token}}
 Content-Type: multipart/form-data
 
 # Replace with an actual image path on your computer
-file=@/Users/yourname/Desktop/test.png
+file=@/Users/avveenav/titan/portfolio/my-portfolio/src/assets/abhinav.jpeg
 
 ### List project images
-GET http://localhost:5050/api/projects/1/images
+GET http://localhost:5050/api/projects/6/images
 Authorization: Bearer {{token}}
 
 ### Delete a project image
@@ -144,3 +144,15 @@ Authorization: Bearer {{token}}
 {
   "name": "nextjs"
 }
+
+# ### Delete a tag
+###
+GET http://localhost:5050/api/projects/6/images
+Authorization: Bearer {{token}}
+
+
+
+### Delete a tag
+DELETE http://localhost:5050/api/projects/6/images/1
+Authorization: Bearer {{token}}
+
