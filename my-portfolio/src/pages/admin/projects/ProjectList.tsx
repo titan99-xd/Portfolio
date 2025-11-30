@@ -19,7 +19,7 @@ export default function ProjectList() {
   useEffect(() => {
     async function loadProjects() {
       try {
-        const res = await axios.get("http://localhost:5000/api/projects");
+        const res = await axios.get("http://localhost:5050/api/projects");
         setProjects(res.data);
       } catch {
         console.error("Failed to load projects");

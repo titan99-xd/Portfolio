@@ -30,10 +30,13 @@ import ProjectList from "./pages/admin/projects/ProjectList";
 import ProjectCreate from "./pages/admin/projects/ProjectCreate";
 import ProjectEdit from "./pages/admin/projects/ProjectEdit";
 import AdminProjectEdit from "./pages/admin/AdminProjectEdit";
+import AdminProjectList from "./pages/admin/AdminProjectList";
+import AdminProjectCreate from "./pages/admin/AdminProjectCreate";
 
 
 
 import "./styles/app.css";
+
 
 function App() {
   return (
@@ -119,6 +122,22 @@ function App() {
   element={
     <ProtectedRoute>
       <ProjectEdit />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/admin/projects"
+  element={
+    <ProtectedRoute>
+      <AdminProjectList />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/admin/projects/new"
+  element={
+    <ProtectedRoute>
+      <AdminProjectCreate />
     </ProtectedRoute>
   }
 />
