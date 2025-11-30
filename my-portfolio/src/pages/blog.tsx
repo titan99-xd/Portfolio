@@ -1,50 +1,69 @@
-import BlogCard from "../components/BlogCard";
-import Footer from "../components/layout/Footer";
-import TagBadge from "../components/TagBadge";
-import "../styles/blog.css";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import "../styles/blog-public.css";
+
+interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  cover_image: string | null;
+  created_at: string;
+}
 
 export default function Blog() {
-  const samplePosts = [
-    {
-      id: 1,
-      title: "How I Built My Portfolio with React + Vite",
-      excerpt: "A breakdown of tools, components, and deployment steps...",
-      thumbnail: "https://picsum.photos/seed/1/600/400",
-      date: "Nov 24, 2025",
-      readTime: 5,
-      tags: ["react", "frontend"],
-    },
-    {
-      id: 2,
-      title: "Why Every Developer Needs a Portfolio",
-      excerpt: "If you're job hunting or freelancing, a portfolio is essential...",
-      thumbnail: "https://picsum.photos/seed/2/600/400",
-      date: "Nov 20, 2025",
-      readTime: 4,
-      tags: ["career", "tips"],
-    },
-  ];
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const API = "http://localhost:5050/api";
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await axios.get(`${API}/blog`);
+        setPosts(res.data);
+      } catch {
+        console.error("Failed to load blog posts");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    load();
+  }, []);
+
+  if (loading) return <p className="blog-loading">Loading blog...</p>;
 
   return (
-    <>
-      <section className="page-section blog-page">
-        <h1 className="highlight blog-title">My Blog</h1>
+    <div className="blog-public-page">
 
-        <div className="tag-list">
-          <TagBadge label="react" />
-          <TagBadge label="design" />
-          <TagBadge label="portfolio" />
-          <TagBadge label="career" />
-        </div>
+      <header className="blog-header">
+        <h1>Insights & Stories</h1>
+        <p>Thoughts, tutorials, and engineering notes from my journey.</p>
+      </header>
 
-        <div className="blog-grid">
-          {samplePosts.map((post) => (
-            <BlogCard key={post.id} post={post} />
-          ))}
-        </div>
-      </section>
+      <div className="blog-grid">
+        {posts.map((post) => (
+          <Link to={`/blog/${post.slug}`} key={post.id} className="blog-card">
+            
+            <div className="blog-image-wrapper">
+              {post.cover_image ? (
+                <img src={post.cover_image} alt={post.title} />
+              ) : (
+                <div className="no-blog-image">No Image</div>
+              )}
+            </div>
 
-      <Footer />
-    </>
+            <div className="blog-card-content">
+              <h3>{post.title}</h3>
+              <p className="blog-date">
+                {new Date(post.created_at).toLocaleDateString()}
+              </p>
+              <span className="blog-read-more">Read Article →</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }

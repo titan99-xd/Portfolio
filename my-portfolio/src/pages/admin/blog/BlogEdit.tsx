@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import MarkdownToolbar from "../../../components/admin/MarkdownToolbar";
 import "../../../styles/admin-blog.css";
 
 interface Tag {
@@ -17,7 +19,6 @@ interface BlogPost {
   created_at: string;
 }
 
-// NEW: Interface for tag IDs returned by /tags/post/:id
 interface PostTagLink {
   id: number;
 }
@@ -27,46 +28,42 @@ export default function BlogEdit() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  const [post, setPost] = useState<BlogPost | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [post, setPost] = useState<BlogPost | null>(null);
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState<string | null>(null);
 
-  // Load blog + tags
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+
+  // Load post + tags
   useEffect(() => {
     async function loadData() {
       try {
-        // Fetch the blog post
-        const postRes = await axios.get(`http://localhost:5000/api/blog/${id}`);
-        const postData = postRes.data;
+        const postRes = await axios.get(
+          `http://localhost:5000/api/blog/${id}`
+        );
 
-        setPost(postData);
-        setTitle(postData.title);
-        setSlug(postData.slug);
-        setContent(postData.content);
-        setCoverImage(postData.cover_image);
+        const p = postRes.data;
+        setPost(p);
+        setTitle(p.title);
+        setSlug(p.slug);
+        setContent(p.content);
+        setCoverImage(p.cover_image);
 
-        // Load all tags
         const tagRes = await axios.get("http://localhost:5000/api/tags");
         setTags(tagRes.data);
 
-        // Load selected tags for this post
-        const tagLinks = await axios.get(
+        const tagLinkRes = await axios.get(
           `http://localhost:5000/api/tags/post/${id}`
         );
 
-        // FIXED: Proper typing
-        const tagIds = tagLinks.data.map(
-          (t: PostTagLink) => t.id
-        );
-
+        const tagIds = tagLinkRes.data.map((t: PostTagLink) => t.id);
         setSelectedTags(tagIds);
-
       } catch {
         alert("Failed to load blog post");
       }
@@ -90,11 +87,7 @@ export default function BlogEdit() {
     const res = await axios.post(
       "http://localhost:5000/api/upload",
       form,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      { headers: { Authorization: `Bearer ${token}` } }
     );
 
     setCoverImage(res.data.url);
@@ -113,11 +106,7 @@ export default function BlogEdit() {
           cover_image: coverImage,
           tags: selectedTags,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       navigate("/admin/blog");
@@ -135,22 +124,10 @@ export default function BlogEdit() {
       <form onSubmit={handleUpdate} className="admin-blog-form">
 
         <label>Title</label>
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
+        <input value={title} onChange={(e) => setTitle(e.target.value)} required />
 
         <label>Slug</label>
         <input value={slug} disabled />
-
-        <label>Content</label>
-        <textarea
-          rows={8}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          required
-        />
 
         <label>Cover Image</label>
         <input
@@ -161,9 +138,30 @@ export default function BlogEdit() {
           }
         />
 
-        {coverImage && (
-          <img src={coverImage} alt="preview" className="cover-preview" />
-        )}
+        {coverImage && <img src={coverImage} className="cover-preview" />}
+
+        <label>Content (Markdown)</label>
+
+        <MarkdownToolbar
+          value={content}
+          onChange={setContent}
+          textareaRef={textareaRef}
+        />
+
+        <div className="markdown-container">
+          <div className="markdown-editor">
+            <textarea
+              ref={textareaRef}
+              rows={14}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
+
+          <div className="markdown-preview">
+            <ReactMarkdown>{content}</ReactMarkdown>
+          </div>
+        </div>
 
         <label>Tags</label>
         <div className="tags-container">

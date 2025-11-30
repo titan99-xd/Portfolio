@@ -11,9 +11,9 @@ POST http://localhost:5050/api/auth/register
 Content-Type: application/json
 
 {
-  "name": "Admin",
-  "email": "admin@example.com",
-  "password": "admin123"
+  "name": "SAdmin",
+  "email": "titan@gmail.com",
+  "password": "Admin123"
 }
 
 ### Login Admin (receive JWT token)
@@ -21,8 +21,8 @@ POST http://localhost:5050/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@example.com",
-  "password": "admin123"
+  "email": "abhinav@gmail.com",
+  "password": "password123"
 }
 
 ###############################################

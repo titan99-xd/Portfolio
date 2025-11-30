@@ -95,3 +95,70 @@
   background: #4f46e5;
   color: white;
 }
+/* --------------------------------------
+   Markdown Editor + Preview
+-------------------------------------- */
+.markdown-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.markdown-editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.markdown-editor textarea {
+  width: 100%;
+  height: 350px;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  resize: vertical;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.markdown-preview {
+  padding: 1.25rem;
+  border-radius: 10px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  overflow-y: auto;
+  max-height: 350px;
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-preview p {
+  margin-bottom: 1rem;
+}
+
+.markdown-preview pre {
+  background: #1e293b;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.markdown-preview code {
+  background: #ececec;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .markdown-container {
+    grid-template-columns: 1fr;
+  }
+}

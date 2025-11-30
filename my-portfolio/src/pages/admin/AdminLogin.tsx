@@ -18,7 +18,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/auth/login", {
+      const response = await axios.post("http://localhost:5050/api/auth/login", {
         email,
         password,
       });
@@ -30,9 +30,13 @@ export default function AdminLogin() {
 
       // Redirect to admin dashboard
       navigate("/admin");
-    } catch {
-  setError("Invalid email or password");
-    }finally {
+    } catch (err: unknown) {
+      // Optional logging
+      console.error("Login error:", err);
+
+      // Safe error display
+      setError("Invalid email or password");
+    } finally {
       setLoading(false);
     }
   };

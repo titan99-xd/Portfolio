@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import MarkdownToolbar from "../../../components/admin/MarkdownToolbar";
 import "../../../styles/admin-blog.css";
 
 interface Tag {
@@ -21,7 +23,9 @@ export default function BlogCreate() {
 
   const token = localStorage.getItem("token");
 
-  // auto-generate slug
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-generate slug
   useEffect(() => {
     const generated = title
       .toLowerCase()
@@ -31,41 +35,30 @@ export default function BlogCreate() {
     setSlug(generated);
   }, [title]);
 
-  // load tags from backend
+  // Load tags
   useEffect(() => {
     axios.get("http://localhost:5000/api/tags").then((res) => {
       setTags(res.data);
     });
   }, []);
 
-  // handle tag selection
   const toggleTag = (id: number) => {
     setSelectedTags((prev) =>
-      prev.includes(id)
-        ? prev.filter((tagId) => tagId !== id)
-        : [...prev, id]
+      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
     );
   };
 
-  // upload image
   const handleImageUpload = async (file: File) => {
-    const formData = new FormData();
-    formData.append("image", file);
+    const form = new FormData();
+    form.append("image", file);
 
-    const res = await axios.post(
-      "http://localhost:5000/api/upload",
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const res = await axios.post("http://localhost:5000/api/upload", form, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     setCoverImage(res.data.url);
   };
 
-  // save blog post
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -77,19 +70,15 @@ export default function BlogCreate() {
           slug,
           content,
           cover_image: coverImage,
-          author_id: 1, // you only have 1 admin
+          author_id: 1,
           tags: selectedTags,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       navigate("/admin/blog");
     } catch {
-      alert("Failed to create blog post");
+      alert("Failed to create post");
     }
   };
 
@@ -99,28 +88,12 @@ export default function BlogCreate() {
 
       <form onSubmit={handleSubmit} className="admin-blog-form">
 
-        {/* TITLE */}
         <label>Title</label>
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
+        <input value={title} onChange={(e) => setTitle(e.target.value)} required />
 
-        {/* SLUG */}
         <label>Slug</label>
         <input value={slug} disabled />
 
-        {/* CONTENT */}
-        <label>Content</label>
-        <textarea
-          rows={8}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          required
-        />
-
-        {/* IMAGE UPLOADER */}
         <label>Cover Image</label>
         <input
           type="file"
@@ -128,26 +101,40 @@ export default function BlogCreate() {
           onChange={(e) => e.target.files && handleImageUpload(e.target.files[0])}
         />
 
-        {coverImage && (
-          <img
-            src={coverImage}
-            alt="preview"
-            className="cover-preview"
-          />
-        )}
+        {coverImage && <img src={coverImage} className="cover-preview" />}
 
-        {/* TAGS */}
+        <label>Content (Markdown)</label>
+
+        <MarkdownToolbar
+          value={content}
+          onChange={setContent}
+          textareaRef={textareaRef}
+        />
+
+        <div className="markdown-container">
+          <div className="markdown-editor">
+            <textarea
+              ref={textareaRef}
+              rows={14}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Write your blog content in Markdown…"
+            />
+          </div>
+
+          <div className="markdown-preview">
+            <ReactMarkdown>{content}</ReactMarkdown>
+          </div>
+        </div>
+
         <label>Tags</label>
-
         <div className="tags-container">
           {tags.map((tag) => (
             <button
               key={tag.id}
               type="button"
               className={
-                selectedTags.includes(tag.id)
-                  ? "tag-btn selected"
-                  : "tag-btn"
+                selectedTags.includes(tag.id) ? "tag-btn selected" : "tag-btn"
               }
               onClick={() => toggleTag(tag.id)}
             >

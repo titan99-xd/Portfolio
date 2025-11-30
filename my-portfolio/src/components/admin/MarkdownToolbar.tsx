@@ -2,8 +2,8 @@ import "../../styles/MarkdownToolbar.css";
 
 interface Props {
   value: string;
-  onChange: (text: string) => void;
-  textareaRef: React.RefObject<HTMLTextAreaElement>;
+  onChange: (value: string) => void;
+  textareaRef: React.RefObject<HTMLTextAreaElement | null>;
 }
 
 export default function MarkdownToolbar({ value, onChange, textareaRef }: Props) {

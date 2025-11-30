@@ -15,17 +15,20 @@ export default function BlogAdminList() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const API = "http://localhost:5050/api";
+
   useEffect(() => {
-    async function fetchPosts() {
+    const fetchPosts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/blog");
+        const res = await axios.get(`${API}/blog`);
         setPosts(res.data);
       } catch {
         console.error("Failed to load blog posts");
       } finally {
         setLoading(false);
       }
-    }
+    };
+
     fetchPosts();
   }, []);
 
@@ -35,7 +38,9 @@ export default function BlogAdminList() {
     <div className="admin-blog-container">
       <div className="admin-blog-header">
         <h1>Blog Posts</h1>
-        <Link className="btn-primary" to="/admin/blog/new">+ New Post</Link>
+        <Link className="btn-primary" to="/admin/blog/new">
+          + New Post
+        </Link>
       </div>
 
       <table className="admin-blog-table">
@@ -50,18 +55,24 @@ export default function BlogAdminList() {
         </thead>
 
         <tbody>
-          {posts.map(post => (
+          {posts.map((post) => (
             <tr key={post.id}>
               <td>
                 {post.cover_image ? (
-                  <img src={post.cover_image} alt={post.title} className="blog-thumb"/>
+                  <img
+                    src={post.cover_image}
+                    alt={post.title}
+                    className="blog-thumb"
+                  />
                 ) : (
                   <span className="no-image">No Image</span>
                 )}
               </td>
+
               <td>{post.title}</td>
               <td>{post.slug}</td>
               <td>{new Date(post.created_at).toLocaleDateString()}</td>
+
               <td>
                 <Link className="btn-small" to={`/admin/blog/${post.id}/edit`}>
                   Edit

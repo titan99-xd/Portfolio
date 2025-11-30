@@ -19,7 +19,7 @@ export default function BlogList() {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const res = await axios.get("http://localhost:5000/api/blog");
+        const res = await axios.get("http://localhost:5050/api/blog");
         setPosts(res.data);
       } catch {
         console.error("Failed to load posts");
@@ -30,36 +30,51 @@ export default function BlogList() {
     fetchPosts();
   }, []);
 
-  if (loading) return <p className="blog-loading">Loading...</p>;
+  if (loading) return <p className="blog-loading">Loading posts…</p>;
 
   return (
-    <section className="blog-list-section">
-      <h1 className="blog-title">Blog</h1>
+    <div className="blog-list-page">
+      {/* Header */}
+      <header className="blog-header">
+        <h1 className="blog-title">Blog</h1>
+        <p className="blog-subtitle">
+          Articles, tutorials, dev logs & insights from my journey in tech.
+        </p>
+      </header>
 
+      {/* Blog Grid */}
       <div className="blog-grid">
         {posts.map((post) => (
           <Link key={post.id} to={`/blog/${post.slug}`} className="blog-card">
-            {post.cover_image && (
+            
+            {/* Cover Image */}
+            {post.cover_image ? (
               <img
                 src={post.cover_image}
                 alt={post.title}
                 className="blog-card-image"
               />
+            ) : (
+              <div className="blog-card-placeholder">No image</div>
             )}
 
+            {/* Content */}
             <div className="blog-card-content">
-              <h2>{post.title}</h2>
+              <h2 className="blog-card-title">{post.title}</h2>
+
               <p className="blog-date">
                 {new Date(post.created_at).toLocaleDateString()}
               </p>
 
               <p className="blog-card-excerpt">
-                {post.content.slice(0, 120)}...
+                {post.content.replace(/[#_*`>]/g, "").slice(0, 150)}…
               </p>
+
+              <span className="blog-read-more">Read More →</span>
             </div>
           </Link>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

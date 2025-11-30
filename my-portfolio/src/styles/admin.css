@@ -1,0 +1,96 @@
+.admin-page {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.admin-table th {
+  background: #f5f5f5;
+  font-weight: bold;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-btn {
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-btn.primary {
+  background: royalblue;
+  color: white;
+}
+
+.admin-btn.danger {
+  background: #e53935;
+  color: white;
+}
+
+.admin-btn.small {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.9rem;
+}
+
+.admin-loading {
+  padding: 2rem;
+  text-align: center;
+}
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-form input,
+.admin-form textarea {
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.admin-feature-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-feature-list {
+  padding-left: 1rem;
+  margin-top: 0.3rem;
+}
+
+.admin-feature-list li {
+  display: flex;
+  justify-content: space-between;
+  background: #f4f4f4;
+  padding: 0.5rem 0.7rem;
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+}
