@@ -2,7 +2,8 @@ import axios from "axios";
 import type { Project } from "../types/Project";
 import type { ProjectImage } from "../types/ProjectImage";
 
-const API_BASE = "http://localhost:5050/api";
+export const SERVER_URL = "http://localhost:5050";
+const API_BASE = `${SERVER_URL}/api`;
 
 // =========================
 // GET ALL PROJECTS (PUBLIC)
@@ -12,9 +13,9 @@ export async function getProjects(): Promise<Project[]> {
   return res.data;
 }
 
-// =================================
+// ===============================
 // GET IMAGES FOR A PROJECT (ADMIN)
-// =================================
+// ===============================
 export async function getProjectImages(
   projectId: number
 ): Promise<ProjectImage[]> {
@@ -23,7 +24,6 @@ export async function getProjectImages(
       Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
     },
   });
-
   return res.data;
 }
 
@@ -36,23 +36,18 @@ export async function createProject(project: Partial<Project>) {
       Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
     },
   });
-
   return res.data;
 }
 
 // =========================
 // UPDATE PROJECT (ADMIN)
 // =========================
-export async function updateProject(
-  id: number,
-  project: Partial<Project>
-) {
+export async function updateProject(id: number, project: Partial<Project>) {
   const res = await axios.put(`${API_BASE}/projects/${id}`, project, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
     },
   });
-
   return res.data;
 }
 
@@ -65,12 +60,11 @@ export async function deleteProject(id: number) {
       Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
     },
   });
-
   return res.data;
 }
 
 // =========================
-// UPLOAD PROJECT IMAGE (ADMIN)
+// UPLOAD IMAGE (ADMIN)
 // =========================
 export async function uploadProjectImage(projectId: number, file: File) {
   const form = new FormData();
