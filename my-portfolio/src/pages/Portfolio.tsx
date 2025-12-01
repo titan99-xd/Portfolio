@@ -1,146 +1,96 @@
 import { useEffect, useState } from "react";
-import Footer from "../components/layout/Footer";
 import "../styles/portfolio.css";
-import { getProjects, getProjectImages } from "../services/projects.api";
+
+import {
+  getProjects,
+  getProjectImages,
+  SERVER_URL,
+} from "../services/projects.api";
+
 import type { Project } from "../types/Project";
 import type { ProjectImage } from "../types/ProjectImage";
 
+type ImageMap = Record<number, ProjectImage[]>;
+
 export default function Portfolio() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [images, setImages] = useState<Record<number, string[]>>({});
+  const [images, setImages] = useState<ImageMap>({});
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
 
-  // Load all projects + images
   useEffect(() => {
-    async function load() {
+    const load = async () => {
       try {
         const proj = await getProjects();
         setProjects(proj);
 
-        const imgMap: Record<number, string[]> = {};
+        const imgMap: ImageMap = {};
 
         for (const p of proj) {
-          try {
-            const imgs: ProjectImage[] = await getProjectImages(p.id);
-            imgMap[p.id] = imgs.map(
-              (img) => `http://localhost:5050/${img.image_url}`
-            );
-          } catch {
-            imgMap[p.id] = [];
-          }
+          const imgs = await getProjectImages(p.id);
+          imgMap[p.id] = imgs;
         }
 
         setImages(imgMap);
       } catch (err) {
-        console.error("Failed to load portfolio:", err);
+        console.error("Failed to load projects", err);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     load();
   }, []);
 
-  const openModal = (image: string) => setSelectedImage(image);
-  const closeModal = () => setSelectedImage(null);
-
-  if (loading) {
-    return (
-      <div className="portfolio-loading">
-        <p>Loading portfolio...</p>
-      </div>
-    );
-  }
+  if (loading) return <p>Loading portfolio...</p>;
 
   return (
     <div className="portfolio-page">
-      {/* Hero Section */}
-      <section className="portfolio-hero">
-        <div className="portfolio-hero-background">
-          <div className="gradient-orb orb-1"></div>
-          <div className="gradient-orb orb-2"></div>
-          <div className="gradient-orb orb-3"></div>
-          <div className="grid-pattern"></div>
-        </div>
+      <h1 className="portfolio-title">Portfolio</h1>
 
-        <div className="portfolio-hero-container">
-          <h1 className="portfolio-hero-title">
-            Portfolio
-            <span className="gradient-text"> & Case Studies</span>
-          </h1>
+      <div className="portfolio-grid">
+        {projects.map((p) => (
+          <div key={p.id} className="portfolio-card">
+            {/* Thumbnail */}
+            {p.thumbnail ? (
+              <img
+                src={`${SERVER_URL}/${p.thumbnail}`}
+                alt={p.title}
+                className="portfolio-thumb"
+              />
+            ) : (
+              <div className="portfolio-no-thumb">No Thumbnail</div>
+            )}
 
-          <p className="portfolio-hero-subtitle">
-            Explore real projects built for clients and my own startup ideas.
-            Clean, functional, and meaningful digital experiences.
-          </p>
-        </div>
-      </section>
+            <h2>{p.title}</h2>
+            <p>{p.description}</p>
 
-      {/* Project Cards */}
-      <section className="projects-section">
-        <div className="projects-container">
-          {projects.map((project, index) => (
-            <div
-              key={project.id}
-              className={`project-card ${index % 2 === 0 ? "even" : "odd"}`}
-            >
-              <div className="project-images">
-                {(images[project.id] || []).map((img, idx) => (
-                  <img
-                    key={idx}
-                    src={img}
-                    alt={`${project.title} image ${idx + 1}`}
-                    onClick={() => openModal(img)}
-                  />
-                ))}
-              </div>
-
-              <div className="project-content">
-                <h3 className="project-title">{project.title}</h3>
-
-                {project.link && (
-                  <p className="project-subtitle">{project.link}</p>
-                )}
-
-                <p className="project-description">{project.description}</p>
-
-                {project.features && (
-                  <div className="project-features">
-                    <h4>Key Features:</h4>
-                    <ul>
-                      {project.features.map((feature, idx) => (
-                        <li key={idx}>{feature}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+            {/* Images gallery */}
+            <div className="portfolio-gallery">
+              {images[p.id]?.map((img) => (
+                <img
+                  key={img.id}
+                  src={`${SERVER_URL}/${img.image_url}`}
+                  className="portfolio-gallery-image"
+                  onClick={() =>
+                    setSelectedImage(`${SERVER_URL}/${img.image_url}`)
+                  }
+                />
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Image Modal */}
-      {selectedImage && (
-        <div className="image-modal" onClick={closeModal}>
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="modal-close"
-              onClick={closeModal}
-              aria-label="Close modal"
-            >
-              ✕
-            </button>
-            <img src={selectedImage} alt="Full size view" />
           </div>
+        ))}
+      </div>
+
+      {/* Fullscreen Modal */}
+      {selectedImage && (
+        <div
+          className="portfolio-fullscreen"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img src={selectedImage} />
         </div>
       )}
-
-      <Footer />
     </div>
   );
 }

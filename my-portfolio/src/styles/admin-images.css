@@ -1,7 +1,11 @@
+/* ================================
+   PROJECT IMAGE MANAGER
+================================ */
 .image-manager {
   padding: 1rem;
-  background: #fff;
+  background: white;
   border-radius: 12px;
+  margin-bottom: 2rem;
 }
 
 .image-grid {
@@ -22,11 +26,12 @@
   border-radius: 8px;
 }
 
+/* Delete button */
 .image-item button {
   margin-top: 0.4rem;
   padding: 6px 10px;
   border: none;
-  background: #e11d48;
+  background: #dc2626;
   color: white;
   border-radius: 6px;
   cursor: pointer;

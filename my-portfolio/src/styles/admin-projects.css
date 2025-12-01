@@ -1,3 +1,6 @@
+/* ================================
+   ADMIN PROJECT LIST PAGE
+================================ */
 .admin-projects-page {
   padding: 2rem;
 }
@@ -9,13 +12,16 @@
   margin-bottom: 2rem;
 }
 
+.btn-primary,
 .admin-btn-primary {
   background: #4f46e5;
   color: white;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
-  text-decoration: none;
   font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
 }
 
 .admin-projects-list {
@@ -25,11 +31,11 @@
 }
 
 .admin-project-card {
+  display: flex;
+  gap: 1rem;
   background: white;
   padding: 1rem;
   border-radius: 12px;
-  display: flex;
-  gap: 1rem;
   box-shadow: 0 4px 16px rgba(0,0,0,0.05);
 }
 
@@ -46,16 +52,21 @@
   gap: 0.5rem;
 }
 
+.btn-small,
 .admin-btn-small {
   padding: 0.4rem 0.6rem;
   background: #2563eb;
   color: white;
   border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
 }
 
+.btn-danger,
 .admin-btn-danger {
-  padding: 0.4rem 0.6rem;
   background: #dc2626;
   color: white;
+  padding: 0.4rem 0.6rem;
   border-radius: 6px;
+  cursor: pointer;
 }

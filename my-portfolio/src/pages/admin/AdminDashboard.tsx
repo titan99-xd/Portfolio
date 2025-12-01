@@ -1,68 +1,39 @@
+// src/pages/admin/AdminDashboard.tsx
 import { Link } from "react-router-dom";
 import "../../styles/admin-dashboard.css";
 
 export default function AdminDashboard() {
   return (
-    <div className="admin-layout">
+    <div className="admin-dashboard">
+      <header className="admin-dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome back! Manage your portfolio content from here.</p>
+      </header>
 
-      {/* Sidebar */}
-      <aside className="admin-sidebar">
-        <h2 className="admin-logo">Dashboard</h2>
+      <section className="admin-dashboard-grid">
+        <Link to="/admin/projects" className="admin-card">
+          <h2>Projects</h2>
+          <p>Create, edit and manage portfolio projects and images.</p>
+          <span className="admin-card-link">Go to Projects →</span>
+        </Link>
 
-        <nav className="admin-nav">
-          <Link to="/admin" className="admin-nav-item">
-            Overview
-          </Link>
-          <Link to="/admin/projects" className="admin-nav-item">
-            Manage Projects
-          </Link>
-          <Link to="/admin/posts" className="admin-nav-item">
-            Manage Blog Posts
-          </Link>
-          <Link to="/admin/tags" className="admin-nav-item">
-            Tags
-          </Link>
-          <Link to="/admin/messages" className="admin-nav-item">
-            Messages
-          </Link>
-        </nav>
+        <Link to="/admin/blog" className="admin-card">
+          <h2>Blog</h2>
+          <p>Publish articles, edit posts and manage tags.</p>
+          <span className="admin-card-link">Go to Blog →</span>
+        </Link>
 
-        <button
-          className="admin-logout-btn"
-          onClick={() => {
-            localStorage.removeItem("token");
-            window.location.href = "/admin/login";
-          }}
+        <a
+          href="/"
+          className="admin-card admin-card-secondary"
+          target="_blank"
+          rel="noreferrer"
         >
-          Logout
-        </button>
-      </aside>
-
-      {/* Main content */}
-      <main className="admin-content">
-        <div className="admin-topbar">
-          <h1>Welcome, Admin 👋</h1>
-        </div>
-
-        <div className="admin-grid">
-
-          <div className="admin-card">
-            <h3>Total Projects</h3>
-            <p className="admin-number">—</p>
-          </div>
-
-          <div className="admin-card">
-            <h3>Total Blog Posts</h3>
-            <p className="admin-number">—</p>
-          </div>
-
-          <div className="admin-card">
-            <h3>Messages Received</h3>
-            <p className="admin-number">—</p>
-          </div>
-
-        </div>
-      </main>
+          <h2>View Public Site</h2>
+          <p>Open the public portfolio in a new tab.</p>
+          <span className="admin-card-link">Open site ↗</span>
+        </a>
+      </section>
     </div>
   );
 }

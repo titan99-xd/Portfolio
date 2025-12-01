@@ -21,22 +21,17 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 
-// Admin Blog Pages
+// Admin Blog
 import BlogAdminList from "./pages/admin/blog/BlogList";
 import BlogCreate from "./pages/admin/blog/BlogCreate";
 import BlogEdit from "./pages/admin/blog/BlogEdit";
 
-import ProjectList from "./pages/admin/projects/ProjectList";
-import ProjectCreate from "./pages/admin/projects/ProjectCreate";
-import ProjectEdit from "./pages/admin/projects/ProjectEdit";
-import AdminProjectEdit from "./pages/admin/AdminProjectEdit";
-import AdminProjectList from "./pages/admin/AdminProjectList";
-import AdminProjectCreate from "./pages/admin/AdminProjectCreate";
-
-
+// Admin Projects
+import AdminProjectList from "./pages/admin/projects/AdminProjectList";
+import AdminProjectCreate from "./pages/admin/projects/AdminProjectCreate";
+import AdminProjectEdit from "./pages/admin/projects/AdminProjectEdit";
 
 import "./styles/app.css";
-
 
 function App() {
   return (
@@ -99,49 +94,35 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* ADMIN PROJECT CRUD */}
           <Route
-  path="/admin/projects"
-  element={
-    <ProtectedRoute>
-      <ProjectList />
-    </ProtectedRoute>
-  }
-/>
+            path="/admin/projects"
+            element={
+              <ProtectedRoute>
+                <AdminProjectList />
+              </ProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/projects/new"
-  element={
-    <ProtectedRoute>
-      <ProjectCreate />
-    </ProtectedRoute>
-  }
-/>
+          <Route
+            path="/admin/projects/new"
+            element={
+              <ProtectedRoute>
+                <AdminProjectCreate />
+              </ProtectedRoute>
+            }
+          />
 
-<Route
-  path="/admin/projects/:id/edit"
-  element={
-    <ProtectedRoute>
-      <ProjectEdit />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/admin/projects"
-  element={
-    <ProtectedRoute>
-      <AdminProjectList />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/admin/projects/new"
-  element={
-    <ProtectedRoute>
-      <AdminProjectCreate />
-    </ProtectedRoute>
-  }
-/>
-<Route path="/admin/projects/:id" element={<ProtectedRoute><AdminProjectEdit /></ProtectedRoute>} />
+          <Route
+            path="/admin/projects/:id/edit"
+            element={
+              <ProtectedRoute>
+                <AdminProjectEdit />
+              </ProtectedRoute>
+            }
+          />
+
         </Routes>
       </main>
     </BrowserRouter>
