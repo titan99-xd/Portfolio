@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+
 import ConfirmModal from "../../../components/admin/ConfirmModal";
 import "../../../styles/admin-blog.css";
 
@@ -24,11 +25,11 @@ export default function BlogAdminList() {
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Search & tag filters
+  // Search + filter
   const [search, setSearch] = useState("");
   const [selectedTag, setSelectedTag] = useState("all");
 
-  // Delete Modal State
+  // Delete modal
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
@@ -38,12 +39,14 @@ export default function BlogAdminList() {
 
   const token = localStorage.getItem("token");
 
-  /* ============================================================
-     LOAD POSTS (with pagination)
-  ============================================================ */
+  /* ===============================
+     Load posts (paginated)
+  =============================== */
   useEffect(() => {
     async function load() {
       try {
+        setLoading(true);
+
         const res = await axios.get(
           `http://localhost:5050/api/blog?page=${page}&limit=6`
         );
@@ -56,27 +59,31 @@ export default function BlogAdminList() {
         setLoading(false);
       }
 
-      // Load tags for filtering
+      // Load tags (only first time)
       try {
         const tagRes = await axios.get("http://localhost:5050/api/tags");
         setTags(tagRes.data);
-      } catch {}
+      } catch (err) {
+        console.error("Failed to load tags:", err);
+      }
     }
 
     load();
   }, [page]);
 
-  /* ============================================================
-     OPEN DELETE MODAL
-  ============================================================ */
-  const handleDeleteClick = (id: number) => {
+  /* ===============================
+     Delete Modal Logic
+  =============================== */
+  const openDeleteModal = (id: number) => {
     setDeleteId(id);
     setModalOpen(true);
   };
 
-  /* ============================================================
-     CONFIRM DELETE
-  ============================================================ */
+  const closeDeleteModal = () => {
+    setDeleteId(null);
+    setModalOpen(false);
+  };
+
   const confirmDelete = async () => {
     if (!deleteId) return;
 
@@ -85,24 +92,30 @@ export default function BlogAdminList() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Remove from UI immediately
+      // Remove instantly without refresh
       setPosts((prev) => prev.filter((p) => p.id !== deleteId));
+
+      closeDeleteModal();
     } catch (err) {
       console.error("Delete failed", err);
-    } finally {
-      setModalOpen(false);
-      setDeleteId(null);
+      closeDeleteModal();
     }
   };
 
-  /* ============================================================
-     CANCEL DELETE
-  ============================================================ */
-  const cancelDelete = () => {
-    setModalOpen(false);
-    setDeleteId(null);
-  };
+  /* ===============================
+     Filter posts (client-side)
+  =============================== */
+  const filteredPosts = posts.filter((post) => {
+    const matchesSearch = post.title.toLowerCase().includes(search.toLowerCase());
 
+    if (selectedTag === "all") return matchesSearch;
+
+    return matchesSearch && post.slug.includes(selectedTag.toLowerCase());
+  });
+
+  /* ===============================
+     Render
+  =============================== */
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -114,17 +127,17 @@ export default function BlogAdminList() {
         </Link>
       </div>
 
-      {/* Search Input */}
+      {/* Search Bar */}
       <input
+        className="admin-search-input"
         type="text"
-        placeholder="Search posts…"
-        className="search-input"
+        placeholder="Search posts..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* Tag Filter */}
-      <div className="tag-filter-bar">
+      {/* Tags Filter */}
+      <div className="tag-filter-row">
         <button
           className={selectedTag === "all" ? "tag-btn selected" : "tag-btn"}
           onClick={() => setSelectedTag("all")}
@@ -135,9 +148,7 @@ export default function BlogAdminList() {
         {tags.map((tag) => (
           <button
             key={tag.id}
-            className={
-              selectedTag === tag.name ? "tag-btn selected" : "tag-btn"
-            }
+            className={selectedTag === tag.name ? "tag-btn selected" : "tag-btn"}
             onClick={() => setSelectedTag(tag.name)}
           >
             {tag.name}
@@ -145,7 +156,7 @@ export default function BlogAdminList() {
         ))}
       </div>
 
-      {/* Blog Table */}
+      {/* Table */}
       <table className="admin-blog-table">
         <thead>
           <tr>
@@ -158,60 +169,49 @@ export default function BlogAdminList() {
         </thead>
 
         <tbody>
-          {posts
-            .filter((p) =>
-              search.length > 0
-                ? p.title.toLowerCase().includes(search.toLowerCase())
-                : true
-            )
-            .map((post) => (
-              <tr key={post.id}>
-                <td>
-                  {post.cover_image ? (
-                    <img
-                      src={post.cover_image}
-                      alt={post.title}
-                      className="blog-thumb"
-                    />
-                  ) : (
-                    <span className="no-image">No Image</span>
-                  )}
-                </td>
+          {filteredPosts.map((post) => (
+            <tr key={post.id}>
+              <td>
+                {post.cover_image ? (
+                  <img src={post.cover_image} alt={post.title} className="blog-thumb" />
+                ) : (
+                  <span className="no-image">No Image</span>
+                )}
+              </td>
 
-                <td>{post.title}</td>
-                <td>{post.slug}</td>
-                <td>{new Date(post.created_at).toLocaleDateString()}</td>
+              <td>{post.title}</td>
+              <td>{post.slug}</td>
+              <td>{new Date(post.created_at).toLocaleDateString()}</td>
 
-                <td className="actions-cell">
-                  <Link
-                    className="btn-small"
-                    to={`/admin/blog/${post.id}/edit`}
-                  >
-                    Edit
-                  </Link>
+              <td>
+                <Link className="btn-small" to={`/admin/blog/${post.id}/edit`}>
+                  Edit
+                </Link>
 
-                  <button
-                    className="btn-small delete"
-                    onClick={() => handleDeleteClick(post.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+                <button
+                  className="btn-small delete-btn"
+                  onClick={() => openDeleteModal(post.id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
       {/* Pagination */}
-      <div className="pagination">
+      <div className="pagination-row">
         <button
           disabled={page === 1}
           onClick={() => setPage((p) => p - 1)}
         >
-          Previous
+          Prev
         </button>
 
-        <span>Page {page} of {totalPages}</span>
+        <span>
+          Page {page} / {totalPages}
+        </span>
 
         <button
           disabled={page === totalPages}
@@ -221,15 +221,15 @@ export default function BlogAdminList() {
         </button>
       </div>
 
-      {/* Confirm Modal */}
+      {/* Confirm Delete Modal */}
       <ConfirmModal
         isOpen={modalOpen}
         title="Delete Blog Post?"
-        message="This action cannot be undone."
+        message="This action cannot be undone. Are you sure?"
         confirmLabel="Delete"
         cancelLabel="Cancel"
         onConfirm={confirmDelete}
-        onCancel={cancelDelete}
+        onCancel={closeDeleteModal}
       />
     </div>
   );

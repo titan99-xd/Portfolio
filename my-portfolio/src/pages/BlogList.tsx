@@ -1,7 +1,7 @@
 // src/pages/BlogList.tsx
 
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/blog-list.css";
 
@@ -14,33 +14,99 @@ interface BlogPost {
   content: string;
 }
 
+interface Tag {
+  id: number;
+  name: string;
+}
+
 export default function BlogList() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Pagination state
-  const [page, setPage] = useState(1);
+  // URL query params
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedTag = searchParams.get("tag") || "";
+  const pageFromUrl = Number(searchParams.get("page")) || 1;
+
+  // Pagination
+  const [page, setPage] = useState(pageFromUrl);
   const [totalPages, setTotalPages] = useState(1);
 
-  const API = "http://localhost:5050/api/blog";
+  const API = "http://localhost:5050/api";
 
+  /* ======================================================
+     Load Posts (pagination + tag)
+  ====================================================== */
   useEffect(() => {
-    async function loadPage() {
+    async function loadPosts() {
       setLoading(true);
+
       try {
-        const res = await axios.get(`${API}?page=${page}&limit=6`);
+        const url = `${API}/blog?page=${page}&limit=6${
+          selectedTag ? `&tag=${selectedTag}` : ""
+        }`;
+
+        const res = await axios.get(url);
+
         setPosts(res.data.posts);
         setTotalPages(res.data.totalPages);
-      } catch (err) {
-        console.warn("Failed to load blog posts", err);
+      } catch  {
+        console.error("Failed to load blog posts");
       } finally {
         setLoading(false);
       }
     }
 
-    loadPage();
-  }, [page]);
+    loadPosts();
+  }, [page, selectedTag]);
 
+  /* ======================================================
+     Load All Tags
+  ====================================================== */
+  useEffect(() => {
+    async function fetchTags() {
+      try {
+        const res = await axios.get(`${API}/tags`);
+        setTags(res.data);
+      } catch  {
+        console.error("Failed to load tags");
+      }
+    }
+
+    fetchTags();
+  }, []);
+
+  /* ======================================================
+     Handle Tag Click
+  ====================================================== */
+  const handleTagClick = (tag: string) => {
+    if (tag === selectedTag) {
+      // Unselect tag
+      setSearchParams({});
+    } else {
+      setSearchParams({ tag });
+    }
+
+    setPage(1); // Reset to page 1 when tag changes
+  };
+
+  /* ======================================================
+     Handle Pagination
+  ====================================================== */
+  const goToPage = (p: number) => {
+    setPage(p);
+
+    if (selectedTag) {
+      setSearchParams({ tag: selectedTag, page: String(p) });
+    } else {
+      setSearchParams({ page: String(p) });
+    }
+  };
+
+  /* ======================================================
+     Loading State
+  ====================================================== */
   if (loading) return <p className="blog-loading">Loading posts…</p>;
 
   return (
@@ -54,11 +120,30 @@ export default function BlogList() {
         </p>
       </header>
 
-      {/* Blog Grid */}
+      {/* ===================== TAG FILTER BAR ===================== */}
+      <div className="tag-filter-bar">
+        <button
+          className={`tag-btn ${selectedTag === "" ? "active" : ""}`}
+          onClick={() => handleTagClick("")}
+        >
+          All
+        </button>
+
+        {tags.map((t) => (
+          <button
+            key={t.id}
+            className={`tag-btn ${selectedTag === t.name ? "active" : ""}`}
+            onClick={() => handleTagClick(t.name)}
+          >
+            {t.name}
+          </button>
+        ))}
+      </div>
+
+      {/* ===================== BLOG CARDS ===================== */}
       <div className="blog-grid">
         {posts.map((post) => (
           <Link key={post.id} to={`/blog/${post.slug}`} className="blog-card">
-            
             {post.cover_image ? (
               <img
                 src={post.cover_image}
@@ -83,11 +168,11 @@ export default function BlogList() {
         ))}
       </div>
 
-      {/* Pagination */}
+      {/* ===================== PAGINATION ===================== */}
       <div className="pagination">
         <button
           className="page-btn"
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          onClick={() => goToPage(Math.max(1, page - 1))}
           disabled={page === 1}
         >
           ← Prev
@@ -99,7 +184,7 @@ export default function BlogList() {
             <button
               key={n}
               className={`page-number ${page === n ? "active" : ""}`}
-              onClick={() => setPage(n)}
+              onClick={() => goToPage(n)}
             >
               {n}
             </button>
@@ -108,7 +193,7 @@ export default function BlogList() {
 
         <button
           className="page-btn"
-          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          onClick={() => goToPage(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
         >
           Next →
