@@ -1,39 +1,32 @@
-// src/pages/admin/AdminDashboard.tsx
-import { Link } from "react-router-dom";
-import "../../styles/admin-dashboard.css";
+import AdminLayout from "../../components/admin/AdminLayout";
 
 export default function AdminDashboard() {
   return (
-    <div className="admin-dashboard">
-      <header className="admin-dashboard-header">
-        <h1>Admin Dashboard</h1>
-        <p>Welcome back! Manage your portfolio content from here.</p>
-      </header>
+    <AdminLayout title="Admin Dashboard">
+      <div className="admin-grid">
 
-      <section className="admin-dashboard-grid">
-        <Link to="/admin/projects" className="admin-card">
+        <div className="admin-card">
+          <div className="admin-number">📁</div>
           <h2>Projects</h2>
-          <p>Create, edit and manage portfolio projects and images.</p>
-          <span className="admin-card-link">Go to Projects →</span>
-        </Link>
+          <p>Manage projects and images</p>
+          <a href="/admin/projects">Go →</a>
+        </div>
 
-        <Link to="/admin/blog" className="admin-card">
+        <div className="admin-card">
+          <div className="admin-number">📝</div>
           <h2>Blog</h2>
-          <p>Publish articles, edit posts and manage tags.</p>
-          <span className="admin-card-link">Go to Blog →</span>
-        </Link>
+          <p>Manage blog posts</p>
+          <a href="/admin/blog">Go →</a>
+        </div>
 
-        <a
-          href="/"
-          className="admin-card admin-card-secondary"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <h2>View Public Site</h2>
-          <p>Open the public portfolio in a new tab.</p>
-          <span className="admin-card-link">Open site ↗</span>
-        </a>
-      </section>
-    </div>
+        <div className="admin-card">
+          <div className="admin-number">🌐</div>
+          <h2>Public Site</h2>
+          <p>Open your portfolio</p>
+          <a href="/" target="_blank">Visit →</a>
+        </div>
+
+      </div>
+    </AdminLayout>
   );
 }

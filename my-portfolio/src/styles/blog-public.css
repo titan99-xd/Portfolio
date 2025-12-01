@@ -234,3 +234,26 @@
 .blog-post-content li {
   margin-bottom: 0.5rem;
 }
+.pagination,
+.pagination-admin {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.pagination button,
+.pagination-admin button {
+  padding: 0.5rem 1rem;
+  background: #111827;
+  color: white;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.pagination button:disabled,
+.pagination-admin button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

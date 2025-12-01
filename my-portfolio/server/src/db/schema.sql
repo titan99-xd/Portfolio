@@ -52,3 +52,6 @@ CREATE TABLE project_images (
     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
 
+-- Added slug column to blog_posts table
+ALTER TABLE blog_posts
+ADD COLUMN slug VARCHAR(255) UNIQUE NOT NULL DEFAULT '';

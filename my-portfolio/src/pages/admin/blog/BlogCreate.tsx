@@ -1,3 +1,5 @@
+// src/pages/admin/blog/BlogCreate.tsx
+
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -5,6 +7,9 @@ import ReactMarkdown from "react-markdown";
 import MarkdownToolbar from "../../../components/admin/MarkdownToolbar";
 import "../../../styles/admin-blog.css";
 
+/* ----------------------------------------------
+   Types
+---------------------------------------------- */
 interface Tag {
   id: number;
   name: string;
@@ -12,6 +17,7 @@ interface Tag {
 
 export default function BlogCreate() {
   const navigate = useNavigate();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
@@ -19,77 +25,121 @@ export default function BlogCreate() {
   const [coverImage, setCoverImage] = useState<string | null>(null);
 
   const [tags, setTags] = useState<Tag[]>([]);
-  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]); // tag names
 
   const token = localStorage.getItem("token");
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // Auto-generate slug
+  /* ----------------------------------------------
+     Auto-generate slug from title
+  ---------------------------------------------- */
   useEffect(() => {
     const generated = title
       .toLowerCase()
       .trim()
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-]/g, "");
+
     setSlug(generated);
   }, [title]);
 
-  // Load tags
+  /* ----------------------------------------------
+     Load all tags
+  ---------------------------------------------- */
   useEffect(() => {
-    axios.get("http://localhost:5000/api/tags").then((res) => {
-      setTags(res.data);
-    });
+    const loadTags = async () => {
+      try {
+        const res = await axios.get("http://localhost:5050/api/tags");
+        setTags(res.data);
+      } catch (err) {
+        console.error("Failed to load tags", err);
+      }
+    };
+
+    loadTags();
   }, []);
 
-  const toggleTag = (id: number) => {
+  /* ----------------------------------------------
+     Toggle tag (name-based)
+  ---------------------------------------------- */
+  const toggleTag = (name: string) => {
     setSelectedTags((prev) =>
-      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
+      prev.includes(name)
+        ? prev.filter((t) => t !== name)
+        : [...prev, name]
     );
   };
 
+  /* ----------------------------------------------
+     Upload cover image
+  ---------------------------------------------- */
   const handleImageUpload = async (file: File) => {
+    if (!token) return alert("Not authenticated");
+
     const form = new FormData();
     form.append("image", file);
 
-    const res = await axios.post("http://localhost:5000/api/upload", form, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+      const res = await axios.post("http://localhost:5050/api/upload", form, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    setCoverImage(res.data.url);
+      setCoverImage(res.data.url);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to upload image");
+    }
   };
 
+  /* ----------------------------------------------
+     Submit new post
+  ---------------------------------------------- */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!token) return alert("You are not logged in");
+
     try {
       await axios.post(
-        "http://localhost:5000/api/blog",
+        "http://localhost:5050/api/blog",
         {
           title,
           slug,
           content,
           cover_image: coverImage,
-          author_id: 1,
-          tags: selectedTags,
+          author_id: 1, // You may replace with decoded JWT later
+          tags: selectedTags, // names
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       navigate("/admin/blog");
-    } catch {
+    } catch (err) {
+      console.error(err);
       alert("Failed to create post");
     }
   };
 
+  /* ----------------------------------------------
+     Render
+  ---------------------------------------------- */
   return (
     <div className="admin-blog-form-container">
       <h1>Create Blog Post</h1>
 
       <form onSubmit={handleSubmit} className="admin-blog-form">
-
         <label>Title</label>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
 
         <label>Slug</label>
         <input value={slug} disabled />
@@ -98,13 +148,16 @@ export default function BlogCreate() {
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => e.target.files && handleImageUpload(e.target.files[0])}
+          onChange={(e) =>
+            e.target.files?.[0] && handleImageUpload(e.target.files[0])
+          }
         />
 
-        {coverImage && <img src={coverImage} className="cover-preview" />}
+        {coverImage && (
+          <img src={coverImage} className="cover-preview" alt="Preview" />
+        )}
 
         <label>Content (Markdown)</label>
-
         <MarkdownToolbar
           value={content}
           onChange={setContent}
@@ -134,9 +187,11 @@ export default function BlogCreate() {
               key={tag.id}
               type="button"
               className={
-                selectedTags.includes(tag.id) ? "tag-btn selected" : "tag-btn"
+                selectedTags.includes(tag.name)
+                  ? "tag-btn selected"
+                  : "tag-btn"
               }
-              onClick={() => toggleTag(tag.id)}
+              onClick={() => toggleTag(tag.name)}
             >
               {tag.name}
             </button>

@@ -1,3 +1,5 @@
+// src/pages/BlogList.tsx
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -16,24 +18,34 @@ export default function BlogList() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const API = "http://localhost:5050/api/blog";
+
   useEffect(() => {
-    async function fetchPosts() {
+    async function loadPage() {
+      setLoading(true);
       try {
-        const res = await axios.get("http://localhost:5050/api/blog");
-        setPosts(res.data);
-      } catch {
-        console.error("Failed to load posts");
+        const res = await axios.get(`${API}?page=${page}&limit=6`);
+        setPosts(res.data.posts);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.warn("Failed to load blog posts", err);
       } finally {
         setLoading(false);
       }
     }
-    fetchPosts();
-  }, []);
+
+    loadPage();
+  }, [page]);
 
   if (loading) return <p className="blog-loading">Loading posts…</p>;
 
   return (
     <div className="blog-list-page">
+
       {/* Header */}
       <header className="blog-header">
         <h1 className="blog-title">Blog</h1>
@@ -47,7 +59,6 @@ export default function BlogList() {
         {posts.map((post) => (
           <Link key={post.id} to={`/blog/${post.slug}`} className="blog-card">
             
-            {/* Cover Image */}
             {post.cover_image ? (
               <img
                 src={post.cover_image}
@@ -58,22 +69,50 @@ export default function BlogList() {
               <div className="blog-card-placeholder">No image</div>
             )}
 
-            {/* Content */}
             <div className="blog-card-content">
               <h2 className="blog-card-title">{post.title}</h2>
-
               <p className="blog-date">
                 {new Date(post.created_at).toLocaleDateString()}
               </p>
-
               <p className="blog-card-excerpt">
                 {post.content.replace(/[#_*`>]/g, "").slice(0, 150)}…
               </p>
-
               <span className="blog-read-more">Read More →</span>
             </div>
           </Link>
         ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="pagination">
+        <button
+          className="page-btn"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          ← Prev
+        </button>
+
+        {[...Array(totalPages)].map((_, i) => {
+          const n = i + 1;
+          return (
+            <button
+              key={n}
+              className={`page-number ${page === n ? "active" : ""}`}
+              onClick={() => setPage(n)}
+            >
+              {n}
+            </button>
+          );
+        })}
+
+        <button
+          className="page-btn"
+          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          disabled={page === totalPages}
+        >
+          Next →
+        </button>
       </div>
     </div>
   );

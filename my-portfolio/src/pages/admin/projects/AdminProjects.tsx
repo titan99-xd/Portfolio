@@ -1,50 +1,53 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import "../../..admin-projects.css";
 
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  thumbnail: string | null;
-  link: string | null;
-}
+// Services
+import {
+  getProjects,
+  deleteProject,
+  SERVER_URL,
+} from "../../../services/projects.api";
+
+// Types
+import type { Project } from "../../../types/Project";
+
+// Styles
+import "../../../styles/admin-projects.css";
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchProjects = async () => {
-    try {
-      const res = await axios.get("/api/projects");
-      setProjects(res.data);
-    } catch {
-      console.error("Failed to load projects");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Load all projects
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await getProjects();
+        setProjects(data);
+      } catch (err) {
+        console.error("Failed to load projects:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const deleteProject = async (id: number) => {
+    load();
+  }, []);
+
+  // Handle delete
+  const handleDelete = async (id: number) => {
     if (!confirm("Delete this project?")) return;
 
-    const token = localStorage.getItem("token");
-
     try {
-      await axios.delete(`/api/projects/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      await deleteProject(id);
       setProjects((prev) => prev.filter((p) => p.id !== id));
-    } catch {
+    } catch (err) {
       alert("Failed to delete project");
+      console.error(err);
     }
   };
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
+  if (loading) return <p>Loading…</p>;
 
   return (
     <div className="admin-projects-page">
@@ -55,37 +58,42 @@ export default function AdminProjects() {
         </Link>
       </div>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="admin-projects-list">
-          {projects.map((p) => (
-            <div className="admin-project-card" key={p.id}>
-              {p.thumbnail && (
-                <img src={p.thumbnail} alt={p.title} className="admin-project-thumb" />
-              )}
+      <div className="admin-projects-list">
+        {projects.map((p) => (
+          <div className="admin-project-card" key={p.id}>
+            {p.thumbnail ? (
+              <img
+                src={`${SERVER_URL}/${p.thumbnail}`}
+                alt={p.title}
+                className="admin-project-thumb"
+              />
+            ) : (
+              <div className="admin-project-thumb no-image">No Image</div>
+            )}
 
-              <div className="admin-project-info">
-                <h3>{p.title}</h3>
-                <p className="admin-project-desc">{p.description}</p>
+            <div className="admin-project-info">
+              <h3>{p.title}</h3>
+              <p className="admin-project-desc">{p.description}</p>
 
-                <div className="admin-project-actions">
-                  <Link to={`/admin/projects/${p.id}/edit`} className="admin-btn-small">
-                    Edit
-                  </Link>
+              <div className="admin-project-actions">
+                <Link
+                  to={`/admin/projects/${p.id}`}
+                  className="admin-btn-small"
+                >
+                  Edit
+                </Link>
 
-                  <button
-                    className="admin-btn-danger"
-                    onClick={() => deleteProject(p.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
+                <button
+                  className="admin-btn-danger"
+                  onClick={() => handleDelete(p.id)}
+                >
+                  Delete
+                </button>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

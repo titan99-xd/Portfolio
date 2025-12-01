@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
 
-import "highlight.js/styles/github.css"; // GitHub-style code blocks
+import "highlight.js/styles/github.css";
 import "../styles/blog-public.css";
 
 interface BlogPost {
@@ -26,33 +27,35 @@ interface Tag {
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
 
+  const API = "http://localhost:5050/api";
+
   const [post, setPost] = useState<BlogPost | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const API = "http://localhost:5050/api";
-
+  /* --------------------------------------------------------
+     Load post + tags
+  -------------------------------------------------------- */
   useEffect(() => {
-    async function fetchData() {
+    const load = async () => {
       try {
-        // Fetch blog post
         const res = await axios.get(`${API}/blog/${slug}`);
-        setPost(res.data);
+        const post = res.data;
+        setPost(post);
 
-        // Fetch tags linked to this post
-        if (res.data.id) {
-          const tagRes = await axios.get(`${API}/tags/post/${res.data.id}`);
+        // load tags for this post
+        if (post.id) {
+          const tagRes = await axios.get(`${API}/tags/post/${post.id}`);
           setTags(tagRes.data);
         }
-
       } catch (err) {
-        console.error("Failed to load post", err);
+        console.error("Failed to load blog post:", err);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
-    fetchData();
+    load();
   }, [slug]);
 
   if (loading) return <p className="blog-loading">Loading article...</p>;
@@ -60,6 +63,8 @@ export default function BlogPost() {
 
   return (
     <div className="blog-post-page">
+
+      {/* HEADER */}
       <header className="blog-post-header">
         <h1>{post.title}</h1>
 
@@ -67,18 +72,18 @@ export default function BlogPost() {
           {new Date(post.created_at).toLocaleDateString()}
         </p>
 
-        {/* Tags */}
+        {/* TAGS */}
         {tags.length > 0 && (
           <div className="blog-tag-list">
-            {tags.map((t) => (
-              <span key={t.id} className="blog-tag">
-                {t.name}
+            {tags.map((tag) => (
+              <span key={tag.id} className="blog-tag">
+                {tag.name}
               </span>
             ))}
           </div>
         )}
 
-        {/* Cover Image */}
+        {/* COVER IMAGE */}
         {post.cover_image && (
           <img
             className="blog-cover"
@@ -88,7 +93,7 @@ export default function BlogPost() {
         )}
       </header>
 
-      {/* MARKDOWN RENDERER */}
+      {/* MARKDOWN CONTENT */}
       <article className="blog-post-content">
         <ReactMarkdown
           children={post.content}

@@ -108,3 +108,30 @@
   font-size: 1.2rem;
   color: #444;
 }
+.pagination {
+  display: flex;
+  gap: 8px;
+  margin: 40px auto;
+  justify-content: center;
+}
+
+.page-btn,
+.page-number {
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.page-number.active {
+  background: black;
+  color: white;
+  border-color: black;
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

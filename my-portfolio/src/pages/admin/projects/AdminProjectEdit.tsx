@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
+// Services
 import {
+  getProjectById,
   updateProject,
-  SERVER_URL,
 } from "../../../services/projects.api";
 
-import axios from "axios";
+// Components
 import AdminProjectImages from "./AdminProjectImages";
+import AdminLayout from "../../../components/admin/AdminLayout";
 
+// Types
+import type { Project } from "../../../types/Project";
+
+// Styles
 import "../../../styles/admin-project-edit.css";
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  link: string | null;
-  thumbnail?: string | null;
-}
 
 export default function AdminProjectEdit() {
   const { id } = useParams();
@@ -25,98 +24,113 @@ export default function AdminProjectEdit() {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [msg, setMsg] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
+  // Load project
   useEffect(() => {
-    const loadProject = async () => {
+    const load = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `${SERVER_URL}/api/projects/${projectId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setProject(res.data);
+        const data = await getProjectById(projectId);
+        setProject(data);
       } catch {
-        setMsg("Failed to load project");
+        setMessage("❌ Failed to load project.");
       } finally {
         setLoading(false);
       }
     };
 
-    loadProject();
+    load();
   }, [projectId]);
 
   const handleSave = async () => {
     if (!project) return;
 
     setSaving(true);
-    setMsg(null);
+    setMessage(null);
 
     try {
       await updateProject(projectId, project);
-      setMsg("Saved successfully!");
+      setMessage("✅ Project updated successfully!");
     } catch {
-      setMsg("Failed to save");
+      setMessage("❌ Failed to update project.");
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <p>Loading project…</p>;
-  if (!project) return <p>Project not found.</p>;
+if (loading)
+  return (
+    <AdminLayout title="Edit Project">
+      <p>Loading…</p>
+    </AdminLayout>
+  );
+
+if (!project)
+  return (
+    <AdminLayout title="Edit Project">
+      <p>Project not found.</p>
+    </AdminLayout>
+  );
 
   return (
-    <div className="admin-project-edit">
-      <h1>Edit Project</h1>
+    <AdminLayout title="Edit Project">
 
-      {msg && <p className="info">{msg}</p>}
+      <div className="admin-project-edit">
 
-      <div className="project-form">
+        {message && <p className="info">{message}</p>}
 
-        <label>Title
-          <input
-            type="text"
-            value={project.title}
-            onChange={(e) => setProject({ ...project, title: e.target.value })}
-          />
-        </label>
+        <div className="project-form">
+          <label>
+            Title
+            <input
+              value={project.title}
+              onChange={(e) =>
+                setProject({ ...project, title: e.target.value })
+              }
+            />
+          </label>
 
-        <label>Description
-          <textarea
-            rows={6}
-            value={project.description}
-            onChange={(e) =>
-              setProject({ ...project, description: e.target.value })
-            }
-          />
-        </label>
+          <label>
+            Description
+            <textarea
+              rows={6}
+              value={project.description}
+              onChange={(e) =>
+                setProject({ ...project, description: e.target.value })
+              }
+            />
+          </label>
 
-        <label>Project Link
-          <input
-            type="text"
-            value={project.link || ""}
-            onChange={(e) => setProject({ ...project, link: e.target.value })}
-          />
-        </label>
+          <label>
+            Project Link
+            <input
+              value={project.link || ""}
+              onChange={(e) =>
+                setProject({ ...project, link: e.target.value })
+              }
+            />
+          </label>
 
-        <label>Thumbnail
-          <input
-            type="text"
-            value={project.thumbnail || ""}
-            onChange={(e) =>
-              setProject({ ...project, thumbnail: e.target.value })
-            }
-          />
-        </label>
+          <label>
+            Thumbnail URL
+            <input
+              value={project.thumbnail || ""}
+              onChange={(e) =>
+                setProject({ ...project, thumbnail: e.target.value })
+              }
+            />
+          </label>
 
-        <button onClick={handleSave} disabled={saving}>
-          {saving ? "Saving…" : "Save Changes"}
-        </button>
+          <button onClick={handleSave} disabled={saving}>
+            {saving ? "Saving…" : "Save Changes"}
+          </button>
+        </div>
+
+        <h2>Project Images</h2>
+        <AdminProjectImages projectId={projectId} />
 
       </div>
 
-      <h2>Project Images</h2>
-      <AdminProjectImages projectId={projectId} />
-    </div>
+    </AdminLayout>
   );
 }

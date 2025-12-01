@@ -83,3 +83,25 @@ export async function uploadProjectImage(projectId: number, file: File) {
 
   return res.data;
 }
+// =============================
+// GET ONE PROJECT BY ID
+// =============================
+export async function getProjectById(id: number): Promise<Project> {
+  const res = await axios.get(`${API_BASE}/projects/${id}`);
+  return res.data;
+}
+// =================================
+// DELETE IMAGE (ADMIN)
+// =========================
+export async function deleteProjectImage(projectId: number, imageId: number) {
+  const res = await axios.delete(
+    `${API_BASE}/projects/${projectId}/images/${imageId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+      },
+    }
+  );
+
+  return res.data;
+}

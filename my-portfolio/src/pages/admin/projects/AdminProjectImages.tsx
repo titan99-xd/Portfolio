@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { SERVER_URL } from "../../../services/projects.api";
+import {
+  getProjectImages,
+  uploadProjectImage,
+  deleteProjectImage,
+  SERVER_URL,
+} from "../../../services/projects.api";
 
-interface ProjectImage {
-  id: number;
-  project_id: number;
-  image_url: string;
-}
+import type { ProjectImage } from "../../../types/ProjectImage";
 
 interface Props {
   projectId: number;
@@ -17,70 +17,52 @@ export default function AdminProjectImages({ projectId }: Props) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Load all images for the project
   useEffect(() => {
-    const loadImages = async () => {
+    const load = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `${SERVER_URL}/api/projects/${projectId}/images`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setImages(res.data);
-      } catch {
+        const data = await getProjectImages(projectId);
+        setImages(data);
+      } catch (err) {
+        console.error(err);
         setError("Failed to load images");
       }
     };
 
-    loadImages();
+    load();
   }, [projectId]);
 
+  // Upload new image
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
+    setError(null);
 
     try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        `${SERVER_URL}/api/projects/${projectId}/images`,
-        (() => {
-          const fd = new FormData();
-          fd.append("file", file);
-          return fd;
-        })(),
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await uploadProjectImage(projectId, file);
 
-      // Refresh list
-      const res = await axios.get(
-        `${SERVER_URL}/api/projects/${projectId}/images`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setImages(res.data);
-    } catch {
+      // Reload images from server
+      const data = await getProjectImages(projectId);
+      setImages(data);
+    } catch (err) {
+      console.error(err);
       setError("Upload failed");
     } finally {
       setUploading(false);
     }
   };
 
-  const deleteImage = async (imageId: number) => {
-    const token = localStorage.getItem("token");
-
-    await axios.delete(
-      `${SERVER_URL}/api/projects/${projectId}/images/${imageId}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    setImages((prev) => prev.filter((i) => i.id !== imageId));
+  // Delete an image
+  const handleDelete = async (imageId: number) => {
+    try {
+      await deleteProjectImage(projectId, imageId);
+      setImages((prev) => prev.filter((img) => img.id !== imageId));
+    } catch (err) {
+      console.error(err);
+      setError("Failed to delete image");
+    }
   };
 
   return (
@@ -89,7 +71,7 @@ export default function AdminProjectImages({ projectId }: Props) {
 
       <input type="file" onChange={handleUpload} disabled={uploading} />
 
-      {uploading && <p>Uploading...</p>}
+      {uploading && <p>Uploading…</p>}
       {error && <p className="error">{error}</p>}
 
       <div className="image-grid">
@@ -98,8 +80,9 @@ export default function AdminProjectImages({ projectId }: Props) {
             <img
               src={`${SERVER_URL}/${img.image_url}`}
               className="thumb"
+              alt=""
             />
-            <button onClick={() => deleteImage(img.id)}>Delete</button>
+            <button onClick={() => handleDelete(img.id)}>Delete</button>
           </div>
         ))}
       </div>

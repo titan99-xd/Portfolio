@@ -1,10 +1,15 @@
 import { Link } from "react-router-dom";
+import type { BlogPost } from "../types/BlogPost";
 import "../styles/blog.css";
 
-export default function BlogCard({ post }) {
+export default function BlogCard({ post }: { post: BlogPost }) {
   return (
     <div className="blog-card">
-      <img src={post.thumbnail} alt={post.title} className="blog-thumb" />
+      <img
+        src={post.thumbnail || "/placeholder.jpg"}
+        alt={post.title}
+        className="blog-thumb"
+      />
 
       <div className="blog-card-content">
         <h2>{post.title}</h2>
