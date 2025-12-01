@@ -1,0 +1,144 @@
+/* ================================
+   ADMIN LAYOUT
+================================ */
+
+/* Full layout wrapper */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: #f3f4f6;
+  font-family: "Inter", sans-serif;
+}
+
+/* ================================
+   SIDEBAR
+================================ */
+.admin-sidebar {
+  width: 240px;
+  background: #111827;
+  color: #e5e7eb;
+  padding: 2rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.admin-logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+}
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.admin-nav-item {
+  padding: 0.6rem 0.9rem;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: 0.2s;
+}
+
+.admin-nav-item:hover {
+  background: #374151;
+  color: white;
+}
+
+.admin-nav-item-active {
+  background: #4f46e5;
+  color: white;
+}
+
+/* Logout */
+.admin-logout-btn {
+  margin-top: auto;
+  background: #ef4444;
+  color: white;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-logout-btn:hover {
+  background: #dc2626;
+}
+
+/* ================================
+   CONTENT AREA
+================================ */
+.admin-content {
+  flex: 1;
+  padding: 2rem 3rem;
+}
+
+.admin-topbar {
+  margin-bottom: 2rem;
+}
+
+.admin-topbar h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* ================================
+   DASHBOARD CARDS
+================================ */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.3rem;
+}
+
+.admin-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: 0.2s;
+  border: 1px solid #e5e7eb;
+}
+
+.admin-card:hover {
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08);
+}
+
+.admin-card-title {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.admin-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #4f46e5;
+  margin-top: 0.4rem;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 1rem;
+  }
+
+  .admin-content {
+    padding: 1rem;
+  }
+}
