@@ -33,7 +33,7 @@ This project showcases my work, projects, skills, and includes a complete admin 
 - Protected pages using authorization middleware
 - Manage projects (create, edit, delete)
 - Upload multiple images per project
-- Manage blog posts & tags
+- Manage blog (create, edit, delete),posts & tags
 - View messages
 
 ### 🗄 Backend API

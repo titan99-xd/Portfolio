@@ -1,5 +1,3 @@
-// src/pages/BlogList.tsx
-
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
