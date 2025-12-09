@@ -1,0 +1,174 @@
+/* --------------------------------------------------
+   Blog Create Page — Container
+-------------------------------------------------- */
+.admin-blog-form-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.admin-blog-form-container h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #111827;
+}
+
+/* --------------------------------------------------
+   Form Styling
+-------------------------------------------------- */
+.admin-blog-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* LABELS */
+.admin-blog-form label {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.3rem;
+  font-size: 1rem;
+}
+
+/* --------------------------------------------------
+   INPUTS — Title, Slug, Image Upload
+-------------------------------------------------- */
+.admin-blog-form input[type="text"],
+.admin-blog-form input:not([type="file"]) {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+
+  background: white !important;
+  color: black !important;
+
+  border: 1.5px solid #d1d5db;
+  border-radius: 6px;
+
+  transition: all 0.2s ease;
+}
+
+.admin-blog-form input[type="text"]:focus,
+.admin-blog-form input:not([type="file"]):focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+/* Disabled Slug */
+.admin-blog-form input:disabled {
+  background: #f3f4f6 !important;
+  color: #6b7280 !important;
+}
+
+/* --------------------------------------------------
+   File Input Wrapper
+-------------------------------------------------- */
+.admin-blog-form input[type="file"] {
+  padding: 10px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Preview Image */
+.cover-preview {
+  width: 180px;
+  border-radius: 10px;
+  margin-top: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+/* --------------------------------------------------
+   Markdown Editor & Preview
+-------------------------------------------------- */
+.markdown-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+
+/* Markdown Textarea */
+.markdown-editor textarea {
+  width: 100%;
+  height: 300px;
+  padding: 14px;
+  font-size: 15px;
+
+  background: #ffffff !important;
+  color: #000000 !important;
+
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  resize: vertical;
+
+  transition: 0.2s;
+}
+
+.markdown-editor textarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  outline: none;
+}
+
+/* Markdown Preview */
+.markdown-preview {
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  height: 300px;
+  overflow-y: auto;
+}
+
+/* --------------------------------------------------
+   Tags
+-------------------------------------------------- */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  border: none;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.tag-btn.selected {
+  background: #6366f1;
+  color: white;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------
+   Submit Button
+-------------------------------------------------- */
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+}

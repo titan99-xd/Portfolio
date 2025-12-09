@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import MarkdownToolbar from "../../../components/admin/MarkdownToolbar";
-import "../../../styles/admin-blog.css";
+import "../../../styles/admin/blog/blog-create.css";
+import AdminLayout from "../../../components/admin/AdminLayout";
 
 /* ----------------------------------------------
    Types
@@ -23,7 +24,7 @@ export default function BlogCreate() {
   const [coverImage, setCoverImage] = useState<string | null>(null);
 
   const [tags, setTags] = useState<Tag[]>([]);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]); // tag names
+  const [selectedTags, setSelectedTags] = useState<string[]>([]); // names
 
   const token = localStorage.getItem("token");
 
@@ -41,23 +42,23 @@ export default function BlogCreate() {
   }, [title]);
 
   /* ----------------------------------------------
-     Load all tags
+     Load all tag options
   ---------------------------------------------- */
   useEffect(() => {
-    const loadTags = async () => {
+    async function loadTags() {
       try {
         const res = await axios.get("http://localhost:5050/api/tags");
         setTags(res.data);
-      } catch (err) {
-        console.error("Failed to load tags", err);
+      } catch (error) {
+        console.error("Failed to load tags", error);
       }
-    };
+    }
 
     loadTags();
   }, []);
 
   /* ----------------------------------------------
-     Toggle tag (name-based)
+     Toggle tag selection (names)
   ---------------------------------------------- */
   const toggleTag = (name: string) => {
     setSelectedTags((prev) =>
@@ -84,14 +85,14 @@ export default function BlogCreate() {
       });
 
       setCoverImage(res.data.url);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       alert("Failed to upload image");
     }
   };
 
   /* ----------------------------------------------
-     Submit new post
+     Submit blog post
   ---------------------------------------------- */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,20 +107,19 @@ export default function BlogCreate() {
           slug,
           content,
           cover_image: coverImage,
-          author_id: 1, // You may replace with decoded JWT later
-          tags: selectedTags, // names
+          tags: selectedTags, // sending names only
         },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // required
           },
         }
       );
 
       navigate("/admin/blog");
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       alert("Failed to create post");
     }
   };
@@ -128,10 +128,13 @@ export default function BlogCreate() {
      Render
   ---------------------------------------------- */
   return (
-    <div className="admin-blog-form-container">
+    <AdminLayout title="" >
+      <div className="admin-blog-form-container">
       <h1>Create Blog Post</h1>
 
       <form onSubmit={handleSubmit} className="admin-blog-form">
+        
+        {/* Title */}
         <label>Title</label>
         <input
           value={title}
@@ -139,9 +142,11 @@ export default function BlogCreate() {
           required
         />
 
+        {/* Slug */}
         <label>Slug</label>
         <input value={slug} disabled />
 
+        {/* Cover Image */}
         <label>Cover Image</label>
         <input
           type="file"
@@ -155,6 +160,7 @@ export default function BlogCreate() {
           <img src={coverImage} className="cover-preview" alt="Preview" />
         )}
 
+        {/* Content */}
         <label>Content (Markdown)</label>
         <MarkdownToolbar
           value={content}
@@ -178,6 +184,7 @@ export default function BlogCreate() {
           </div>
         </div>
 
+        {/* Tags */}
         <label>Tags</label>
         <div className="tags-container">
           {tags.map((tag) => (
@@ -196,8 +203,10 @@ export default function BlogCreate() {
           ))}
         </div>
 
+        {/* Submit */}
         <button className="btn-primary">Create Post</button>
       </form>
     </div>
+    </AdminLayout>
   );
 }

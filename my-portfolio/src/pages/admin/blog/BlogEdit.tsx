@@ -3,8 +3,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import MarkdownToolbar from "../../../components/admin/MarkdownToolbar";
-import "../../../styles/admin-blog.css";
+import "../../../styles/admin/blog/blog-edit.css";
+import AdminLayout from "../../../components/admin/AdminLayout";
 
+/* ----------------------------------------------
+   Types
+---------------------------------------------- */
 interface Tag {
   id: number;
   name: string;
@@ -14,57 +18,57 @@ export default function BlogEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState<string | null>(null);
 
   const [tags, setTags] = useState<Tag[]>([]);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]); // using tag names
+  const [selectedTags, setSelectedTags] = useState<string[]>([]); // tag names
 
   const [loading, setLoading] = useState(true);
 
-  /* ============================================
-       LOAD POST + TAGS
-  ============================================ */
+  /* ----------------------------------------------
+     Load Post + All Tags + Selected Tags
+  ---------------------------------------------- */
   useEffect(() => {
-    async function load() {
+    async function loadData() {
       try {
-        // Load blog post
+        // Fetch post data
         const postRes = await axios.get(`http://localhost:5050/api/blog/${id}`);
         const post = postRes.data;
 
         setTitle(post.title);
+        setSlug(post.slug);
         setContent(post.content);
         setCoverImage(post.cover_image);
 
-        // Load all available tags
+        // Fetch all available tags
         const tagsRes = await axios.get("http://localhost:5050/api/tags");
         setTags(tagsRes.data);
 
-        // Load this post’s tags
-        const postTagsRes = await axios.get(
+        // Fetch selected tags for this post
+        const selectedRes = await axios.get(
           `http://localhost:5050/api/tags/post/${id}`
         );
 
-        // Convert to tag names
-        setSelectedTags(postTagsRes.data.map((t: Tag) => t.name));
+        setSelectedTags(selectedRes.data.map((t: Tag) => t.name));
       } catch (err) {
         console.error(err);
-        alert("Failed to load post data");
+        alert("Failed to load blog post");
       } finally {
         setLoading(false);
       }
     }
 
-    load();
+    loadData();
   }, [id]);
 
-  /* ============================================
-       TOGGLE TAG
-  ============================================ */
+  /* ----------------------------------------------
+     Toggle tag (name-based)
+  ---------------------------------------------- */
   const toggleTag = (name: string) => {
     setSelectedTags((prev) =>
       prev.includes(name)
@@ -73,34 +77,44 @@ export default function BlogEdit() {
     );
   };
 
-  /* ============================================
-       HANDLE IMAGE UPLOAD
-  ============================================ */
+  /* ----------------------------------------------
+     Upload cover image
+  ---------------------------------------------- */
   const handleImageUpload = async (file: File) => {
+    if (!token) return alert("Not authenticated");
+
     const form = new FormData();
     form.append("image", file);
 
-    const res = await axios.post("http://localhost:5050/api/upload", form, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+      const res = await axios.post("http://localhost:5050/api/upload", form, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    setCoverImage(res.data.url);
+      setCoverImage(res.data.url);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to upload image");
+    }
   };
 
-  /* ============================================
-       SAVE CHANGES
-  ============================================ */
+  /* ----------------------------------------------
+     Save updated post
+  ---------------------------------------------- */
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!token) return alert("Not authenticated");
 
     try {
       await axios.put(
         `http://localhost:5050/api/blog/${id}`,
         {
           title,
+          slug,        // slug stays same unless editable
           content,
           cover_image: coverImage,
-          tags: selectedTags, // send tag NAMES
+          tags: selectedTags, // names only
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -108,19 +122,29 @@ export default function BlogEdit() {
       navigate("/admin/blog");
     } catch (err) {
       console.error(err);
-      alert("Failed to update blog post");
+      alert("Failed to update post");
     }
   };
 
+  /* ----------------------------------------------
+     UI
+  ---------------------------------------------- */
   if (loading) return <p>Loading…</p>;
 
   return (
+    <AdminLayout title ="">
     <div className="admin-blog-form-container">
       <h1>Edit Blog Post</h1>
 
       <form onSubmit={handleUpdate} className="admin-blog-form">
+
+        {/* Title */}
         <label>Title</label>
         <input value={title} onChange={(e) => setTitle(e.target.value)} required />
+
+        {/* Slug */}
+        <label>Slug</label>
+        <input value={slug} disabled />
 
         {/* Cover Image */}
         <label>Cover Image</label>
@@ -128,11 +152,13 @@ export default function BlogEdit() {
           type="file"
           accept="image/*"
           onChange={(e) =>
-            e.target.files && handleImageUpload(e.target.files[0])
+            e.target.files?.[0] && handleImageUpload(e.target.files[0])
           }
         />
 
-        {coverImage && <img src={coverImage} className="cover-preview" />}
+        {coverImage && (
+          <img src={coverImage} className="cover-preview" alt="Preview" />
+        )}
 
         {/* Markdown Editor */}
         <label>Content (Markdown)</label>
@@ -177,8 +203,9 @@ export default function BlogEdit() {
           ))}
         </div>
 
-        <button className="btn-primary">Update Post</button>
+        <button className="btn-primary">Save Changes</button>
       </form>
     </div>
+    </AdminLayout>
   );
 }

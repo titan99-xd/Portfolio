@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 import ConfirmModal from "../../../components/admin/ConfirmModal";
-import "../../../styles/admin-blog.css";
+import "../../../styles/admin/blog/blog-list.css";
+import AdminLayout from "../../../components/admin/AdminLayout";
 
 interface BlogPost {
   id: number;
@@ -117,9 +118,11 @@ export default function BlogAdminList() {
   if (loading) return <p>Loading...</p>;
 
   return (
+    <AdminLayout title ="Blog Posts">
+    
     <div className="admin-blog-container">
       <div className="admin-blog-header">
-        <h1>Blog Posts</h1>
+        <h1>Admin access only</h1>
         <Link className="btn-primary" to="/admin/blog/new">
           + New Post
         </Link>
@@ -230,5 +233,7 @@ export default function BlogAdminList() {
         onCancel={closeDeleteModal}
       />
     </div>
+    </AdminLayout>
+    
   );
 }
