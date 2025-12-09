@@ -8,7 +8,7 @@ import { createProject } from "../../../services/projects.api";
 import AdminLayout from "../../../components/admin/AdminLayout";
 
 // Styles
-import "../../../styles/admin-projects.css";
+import "../../../styles/admin/project/project-create.css";
 
 export default function AdminProjectCreate() {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ export default function AdminProjectCreate() {
   };
 
   return (
-    <AdminLayout title="Create Project">
+    <AdminLayout title="Create New Project">
       <div className="admin-projects-form-container">
         <form onSubmit={submit} className="admin-projects-form">
 

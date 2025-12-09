@@ -1,72 +1,141 @@
-/* ================================
-   ADMIN PROJECT LIST PAGE
-================================ */
-.admin-projects-page {
-  padding: 2rem;
+/* =========================================
+   Admin Projects – Container
+========================================= */
+.admin-projects-container {
+  padding: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+  font-family: "Inter", sans-serif;
 }
 
+/* =========================================
+   Header
+========================================= */
 .admin-projects-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 25px;
 }
 
-.btn-primary,
-.admin-btn-primary {
-  background: #4f46e5;
+.admin-projects-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* New Project Button */
+.btn-primary {
+  background: #4b7cf3;
   color: white;
-  padding: 0.6rem 1.2rem;
+  padding: 10px 18px;
   border-radius: 8px;
   font-weight: 600;
   text-decoration: none;
-  cursor: pointer;
-  border: none;
+  transition: 0.25s ease;
 }
 
-.admin-projects-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.btn-primary:hover {
+  background: #3a68cf;
+  transform: translateY(-2px);
 }
 
-.admin-project-card {
-  display: flex;
-  gap: 1rem;
+/* =========================================
+   Table Styles
+========================================= */
+.admin-projects-table {
+  width: 100%;
+  border-collapse: collapse;
   background: white;
-  padding: 1rem;
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
-.admin-project-thumb {
-  width: 120px;
-  height: 80px;
-  border-radius: 10px;
+/* Table Header */
+.admin-projects-table thead {
+  background: #f4f6fa;
+}
+
+.admin-projects-table th {
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #3b3f50;
+  border-bottom: 1px solid #e2e6ee;
+}
+
+/* Table Rows */
+.admin-projects-table td {
+  padding: 14px 18px;
+  font-size: 0.95rem;
+  color: #333;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f3f7;
+}
+
+/* Hover highlight */
+.admin-projects-table tbody tr:hover {
+  background: #f9fbff;
+}
+
+/* =========================================
+   Thumbnail
+========================================= */
+.project-thumb {
+  width: 75px;
+  height: 55px;
   object-fit: cover;
-}
-
-.admin-project-actions {
-  margin-top: 1rem;
-  display: flex;
-  gap: 0.5rem;
-}
-
-.btn-small,
-.admin-btn-small {
-  padding: 0.4rem 0.6rem;
-  background: #2563eb;
-  color: white;
   border-radius: 6px;
-  cursor: pointer;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* No Thumbnail Text */
+.no-image {
+  padding: 6px 12px;
+  background: #f0f1f5;
+  color: #666;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+/* =========================================
+   Edit Button
+========================================= */
+.btn-small {
+  background: #4b7cf3;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
   text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: 0.25s ease;
 }
 
-.btn-danger,
-.admin-btn-danger {
-  background: #dc2626;
-  color: white;
-  padding: 0.4rem 0.6rem;
-  border-radius: 6px;
-  cursor: pointer;
+.btn-small:hover {
+  background: #3a68cf;
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   Responsive
+========================================= */
+@media (max-width: 768px) {
+  .admin-projects-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .admin-projects-table th,
+  .admin-projects-table td {
+    padding: 12px;
+  }
+
+  .project-thumb {
+    width: 60px;
+    height: 45px;
+  }
 }

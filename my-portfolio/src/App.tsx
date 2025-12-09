@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 // Layout
 import Header from "./components/layout/Header";
@@ -30,19 +30,28 @@ import BlogEdit from "./pages/admin/blog/BlogEdit";
 import AdminProjectList from "./pages/admin/projects/AdminProjectList";
 import AdminProjectCreate from "./pages/admin/projects/AdminProjectCreate";
 import AdminProjectEdit from "./pages/admin/projects/AdminProjectEdit";
+import MessagesList from "./pages/admin/messages/MessagesList";
 
 import "./styles/app.css";
 
-function App() {
+function LayoutWrapper() {
+  const location = useLocation();
+
+  // Detect admin route (for hiding ContactButton only)
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
   return (
-    <BrowserRouter>
+    <>
       <ScrollToTop />
+
+      {/* Header is always shown */}
       <Header />
-      <ContactButton />
+
+      {/* Contact button is hidden on admin routes */}
+      {!isAdminRoute && <ContactButton />}
 
       <main className="app-main">
         <Routes>
-
           {/* PUBLIC ROUTES */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -76,7 +85,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/blog/new"
             element={
@@ -85,7 +93,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/blog/:id/edit"
             element={
@@ -104,7 +111,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/projects/new"
             element={
@@ -113,7 +119,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin/projects/:id/edit"
             element={
@@ -123,10 +128,25 @@ function App() {
             }
           />
 
+          {/* ADMIN MESSAGES */}
+          <Route
+            path="/admin/messages"
+            element={
+              <ProtectedRoute>
+                <MessagesList />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
-    </BrowserRouter>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <LayoutWrapper />
+    </BrowserRouter>
+  );
+}

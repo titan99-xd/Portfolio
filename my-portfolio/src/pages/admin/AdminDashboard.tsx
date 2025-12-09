@@ -20,6 +20,13 @@ export default function AdminDashboard() {
         </div>
 
         <div className="admin-card">
+          <div className="admin-number">📩</div>
+          <h2>Messages</h2>
+          <p>View and manage messages</p>
+          <a href="/admin/messages">Go →</a>
+        </div>
+
+        <div className="admin-card">
           <div className="admin-number">🌐</div>
           <h2>Public Site</h2>
           <p>Open your portfolio</p>

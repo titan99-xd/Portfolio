@@ -1,0 +1,105 @@
+/* =========================================
+   Project Create / Edit Form Styling
+   Clean, modern, responsive admin UI
+========================================= */
+
+.admin-projects-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.admin-projects-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+
+  /* subtle shadow */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+
+  border: 1px solid #e5e7eb;
+}
+
+/* Labels */
+.admin-projects-form label {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+/* Inputs + Textarea */
+.admin-projects-form input,
+.admin-projects-form textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font-size: 0.95rem;
+
+  background: #f9fafb;
+  color: #111827;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  transition: all 0.2s ease;
+}
+
+.admin-projects-form input:focus,
+.admin-projects-form textarea:focus {
+  background: #ffffff;
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+/* Textarea styling */
+.admin-projects-form textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+}
+
+/* Create button */
+.admin-projects-form .btn-primary {
+  background: #2563eb;
+  color: white;
+  padding: 0.9rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.admin-projects-form .btn-primary:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+}
+
+.admin-projects-form .btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Placeholder styling */
+.admin-projects-form input::placeholder {
+  color: #9ca3af;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media (max-width: 640px) {
+  .admin-projects-form-container {
+    padding: 1rem;
+  }
+
+  .admin-projects-form {
+    padding: 1.5rem;
+    gap: 1.2rem;
+  }
+}

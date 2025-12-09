@@ -6,6 +6,7 @@ import { getProjects, SERVER_URL } from "../../../services/projects.api";
 
 // Layout
 import AdminLayout from "../../../components/admin/AdminLayout";
+// import ConfirmModal from "../../../components/admin/ConfirmModal";
 
 // Styles
 import "../../../styles/admin-projects.css";
@@ -37,8 +38,7 @@ export default function AdminProjectList() {
       <div className="admin-projects-container">
 
         <div className="admin-projects-header">
-          <h1>Projects</h1>
-
+          <h1>Admin access only</h1>
           <Link to="/admin/projects/new" className="btn-primary">
             + New Project
           </Link>
@@ -101,6 +101,17 @@ export default function AdminProjectList() {
             </tbody>
           </table>
         )}
+
+        {/* Confirm Delete Modal */}
+              {/* <ConfirmModal
+                isOpen={modalOpen}
+                title="Delete This Project?"
+                message="This action cannot be undone. Are you sure?"
+                confirmLabel="Delete"
+                cancelLabel="Cancel"
+                onConfirm={confirmDelete}
+                onCancel={closeDeleteModal}
+              /> */}
 
       </div>
     </AdminLayout>
