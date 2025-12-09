@@ -5,6 +5,7 @@ import apiRouter from "./routes/index";
 import pool from "./db/db";
 import path from "path";
 
+
 dotenv.config();
 
 const app = express();
@@ -38,6 +39,8 @@ app.use(express.json());
 
 // API Routes
 app.use("/api", apiRouter);
+
+
 
 // Test route
 app.get("/", (req, res) => {
