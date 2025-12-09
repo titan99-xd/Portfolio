@@ -22,6 +22,7 @@ export default function AdminLayout({ title, children }: {
           <Link className="admin-nav-item" to="/admin">Dashboard</Link>
           <Link className="admin-nav-item" to="/admin/projects">Projects</Link>
           <Link className="admin-nav-item" to="/admin/blog">Blog</Link>
+          <Link className="admin-nav-item" to="/admin/messages">Messages</Link>
         </nav>
 
         <button className="admin-logout-btn" onClick={logout}>
@@ -32,7 +33,7 @@ export default function AdminLayout({ title, children }: {
       {/* Content */}
       <main className="admin-content">
         <div className="admin-topbar">
-          <h1>{title}</h1>
+          <h1 className="admin-page-title">{title}</h1>
         </div>
 
         {children}

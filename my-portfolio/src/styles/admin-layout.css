@@ -76,17 +76,32 @@
 ================================ */
 .admin-content {
   flex: 1;
-  padding: 2rem 3rem;
+  padding: 1.2rem 2.4rem; /* reduced top spacing */
 }
 
+/* ================================
+   TOPBAR TITLE
+================================ */
 .admin-topbar {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center; /* center align */
 }
 
 .admin-topbar h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #111827;
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin: 0 auto;
+  display: inline-block;
+
+  /* Clean STATIC gradient, NON-FLICKERING */
+  background: linear-gradient(90deg, #4f46e5, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Smooth rendering */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ================================
@@ -140,5 +155,9 @@
 
   .admin-content {
     padding: 1rem;
+  }
+
+  .admin-topbar h1 {
+    font-size: 2rem;
   }
 }
