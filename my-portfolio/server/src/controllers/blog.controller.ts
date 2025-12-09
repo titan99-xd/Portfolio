@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import pool from "../db/db";
 import type { RowDataPacket, ResultSetHeader } from "mysql2";
 import { safeRows } from "../utils/dbHelpers";
+import type { AuthRequest } from "../middleware/auth.middleware";
 
 /* ============================================================
    TYPES
@@ -51,7 +52,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
     const params: (string | number)[] = [];
     const countParams: (string | number)[] = [];
 
-    // ---------- If tag filter exists ----------
+    // Filter by tag?
     if (tag) {
       postsQuery += `
         INNER JOIN post_tags pt ON pt.post_id = bp.id
@@ -69,7 +70,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
       countParams.push(tag);
     }
 
-    // ---------- Ordering + pagination ----------
+    // Add pagination
     postsQuery += `
       ORDER BY bp.created_at DESC
       LIMIT ? OFFSET ?
@@ -77,11 +78,12 @@ export const getAllPosts = async (req: Request, res: Response) => {
 
     params.push(limit, offset);
 
-    // ---------- Execute ----------
+    // Get posts
     const posts = safeRows<BlogPost>(
       await pool.query(postsQuery, params)
     );
 
+    // Count total
     const count = safeRows<CountRow>(
       await pool.query(countQuery, countParams)
     )[0]?.total || 0;
@@ -93,14 +95,14 @@ export const getAllPosts = async (req: Request, res: Response) => {
       total: count,
       tag: tag ?? null,
     });
-  } catch (err) {
-    console.error("getAllPosts error:", err);
+  } catch (error) {
+    console.error("getAllPosts error:", error);
     return res.status(500).json({ error: "Failed to fetch posts" });
   }
 };
 
 /* ============================================================
-   GET POST BY SLUG
+   GET A SINGLE POST BY SLUG
 ============================================================ */
 export const getPostBySlug = async (req: Request, res: Response) => {
   const { slug } = req.params;
@@ -118,14 +120,14 @@ export const getPostBySlug = async (req: Request, res: Response) => {
     }
 
     return res.json(rows[0]);
-  } catch (err) {
-    console.error("getPostBySlug error:", err);
+  } catch (error) {
+    console.error("getPostBySlug error:", error);
     return res.status(500).json({ error: "Failed to fetch post" });
   }
 };
 
 /* ============================================================
-   HELPER — Resolve or Insert Tag
+   HELPER — Resolve or Create Tag
 ============================================================ */
 async function resolveTagId(tagName: string): Promise<number> {
   const existingRows = safeRows<TagRow>(
@@ -146,10 +148,10 @@ async function resolveTagId(tagName: string): Promise<number> {
 }
 
 /* ============================================================
-   CREATE BLOG POST
+   CREATE BLOG POST — USE AUTH USER AS AUTHOR
 ============================================================ */
-export const createPost = async (req: Request, res: Response) => {
-  const { title, slug, content, cover_image, author_id, tags } = req.body;
+export const createPost = async (req: AuthRequest, res: Response) => {
+  const { title, slug, content, cover_image, tags } = req.body;
 
   if (!title || !slug || !content) {
     return res.status(400).json({
@@ -158,16 +160,20 @@ export const createPost = async (req: Request, res: Response) => {
   }
 
   try {
+    // Always use JWT user.id — secure!
+    const authorId = req.user?.id ?? null;
+
     const insert = await pool.query<ResultSetHeader>(
       `
       INSERT INTO blog_posts (title, slug, content, cover_image, author_id)
       VALUES (?, ?, ?, ?, ?)
       `,
-      [title, slug, content, cover_image ?? null, author_id ?? null]
+      [title, slug, content, cover_image ?? null, authorId]
     );
 
     const postId = insert[0].insertId;
 
+    // Insert tags
     if (Array.isArray(tags)) {
       for (const t of tags) {
         const name = String(t).trim().toLowerCase();
@@ -188,8 +194,8 @@ export const createPost = async (req: Request, res: Response) => {
       postId,
       slug,
     });
-  } catch (err) {
-    console.error("createPost error:", err);
+  } catch (error) {
+    console.error("createPost error:", error);
     return res.status(500).json({ error: "Failed to create post" });
   }
 };
@@ -197,7 +203,7 @@ export const createPost = async (req: Request, res: Response) => {
 /* ============================================================
    UPDATE BLOG POST
 ============================================================ */
-export const updatePost = async (req: Request, res: Response) => {
+export const updatePost = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
   const { title, slug, content, cover_image, tags } = req.body;
 
@@ -211,8 +217,10 @@ export const updatePost = async (req: Request, res: Response) => {
       [title, slug, content, cover_image ?? null, id]
     );
 
+    // Remove old tags
     await pool.query("DELETE FROM post_tags WHERE post_id = ?", [id]);
 
+    // Add updated tags
     if (Array.isArray(tags)) {
       for (const t of tags) {
         const name = t.toLowerCase().trim();
@@ -228,8 +236,8 @@ export const updatePost = async (req: Request, res: Response) => {
     }
 
     return res.json({ success: true, message: "Post updated" });
-  } catch (err) {
-    console.error("updatePost error:", err);
+  } catch (error) {
+    console.error("updatePost error:", error);
     return res.status(500).json({ error: "Failed to update post" });
   }
 };
@@ -237,14 +245,14 @@ export const updatePost = async (req: Request, res: Response) => {
 /* ============================================================
    DELETE POST
 ============================================================ */
-export const deletePost = async (req: Request, res: Response) => {
+export const deletePost = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
   try {
     await pool.query("DELETE FROM blog_posts WHERE id = ?", [id]);
     return res.json({ success: true, message: "Post deleted" });
-  } catch (err) {
-    console.error("deletePost error:", err);
+  } catch (error) {
+    console.error("deletePost error:", error);
     return res.status(500).json({ error: "Failed to delete post" });
   }
 };

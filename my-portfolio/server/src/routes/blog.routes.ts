@@ -10,13 +10,15 @@ import { verifyToken } from "../middleware/auth.middleware";
 
 const router = Router();
 
-// Public routes
+// Public list
 router.get("/", getAllPosts);
-router.get("/:slug", getPostBySlug);
 
-// Admin-only routes
+// Admin routes MUST be above slug route
 router.post("/", verifyToken, createPost);
 router.put("/:id", verifyToken, updatePost);
 router.delete("/:id", verifyToken, deletePost);
+
+// Public single post by slug (keep LAST)
+router.get("/:slug", getPostBySlug);
 
 export default router;
