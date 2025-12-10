@@ -1,88 +1,80 @@
-# 🚀 Personal Portfolio Website (Full-Stack)
+# 🚀 My Portfolio — Full-Stack Web App (React + Node + MySQL)
 
-A full-stack personal portfolio website built with:
+A modern full-stack portfolio website with a full admin dashboard, blog system, project manager, and contact message system.
 
-- **React + TypeScript (Vite)**
-- **Node.js + Express + TypeScript**
-- **MySQL (with connection pool)**
-- **JWT authentication**
-- **Multer image uploads**
-- **Admin dashboard (protected)**
-- **Dynamic projects & blog system**
-
-This project showcases my work, projects, skills, and includes a complete admin panel to manage content.
+Frontend: **React + Vite + TypeScript**  
+Backend: **Node.js + Express + MySQL**  
+Admin Panel: **Fully styled dashboard with CRUD for Projects, Blog, Images, Messages**
 
 ---
 
-# 🌟 Features
+## 🌟 Features
 
-### 🎨 Public Website
+### 🖥 Public Website
 
-- Modern animated hero sections
-- About page
-- Fully responsive Portfolio section
-- Dynamic project cards
-- Multiple images per project (gallery)
-- Contact form (stores messages in DB)
-- Sticky contact button
-- Blog section (optional)
+- Fully responsive modern UI  
+- Animated Home page  
+- About page  
+- Portfolio with project gallery  
+- Contact form (messages stored in database)  
+- Blog system:
+  - Pagination  
+  - Tag filtering  
+  - Search  
+  - Markdown rendering  
+  - Individual blog pages  
 
 ### 🔐 Admin Dashboard
 
-- Login system with JWT authentication
-- Protected pages using authorization middleware
-- Manage projects (create, edit, delete)
-- Upload multiple images per project
-- Manage blog (create, edit, delete),posts & tags
-- View messages
+Protected by JWT Authentication.
 
-### 🗄 Backend API
+Includes:
 
-- REST API with Express + TypeScript
-- Strong validation & error handling
-- Secure password hashing (bcryptjs)
-- File upload handling with Multer
-- Database connection with MySQL Pool
-- MVC architecture (controllers, routes, middleware)
+- **Blog Management**
+  - Create / Edit / Delete blog posts
+  - Markdown editor with toolbar + live preview
+  - Cover image upload
+  - Tag system (create-on-post)
+  - Paginated list with search + tag filter
+
+- **Project Management**
+  - Create / Edit projects
+  - Upload unlimited images
+  - Edit titles, descriptions, links
+  - Delete images & projects
+  - Clean responsive admin table
+
+- **Messages**
+  - View contact form submissions
+  - Delete messages
+
 
 ---
 
-# 🧱 Tech Stack
+## 📦 Tech Stack
 
 ### Frontend
 
-- React
+- React (Vite)
 - TypeScript
-- Vite
 - React Router
 - Axios
-- Custom CSS
+- React Markdown
+- Custom CSS (no Tailwind)
 
 ### Backend
 
-- Node.js
-- Express
-- TypeScript
+- Node.js + Express
+- MySQL2
+- Multer (image uploads)
 - JWT Authentication
-- Multer (image upload)
-- bcryptjs
-- MySQL2 (promise)
-
-### Database
-
-- MySQL
-- ERD includes:
-  - users
-  - blog_posts
-  - tags
-  - post_tags
-  - projects
-  - project_images
-  - messages
+- Bcrypt (password hashing)
+- dotenv
+- CORS
 
 ---
 
-# 📁 Folder Structure
+## 📁 Project Structure
 
 ```bash
 my-portfolio/
@@ -153,4 +145,39 @@ CREATE TABLE project_images (
     project_id INT,
     image_url VARCHAR(255)
 );
+```
+
+---
+
+# ⚙️ Backend Setup
+
+### 1️⃣ Install dependencies
+
+```sh
+cd server
+npm install
+express
+cors
+dotenv
+jsonwebtoken
+mysql2
+bcryptjs
+multer
+typescript. ( Dev Pacakages)
+ts-node
+nodemon
+@types/node
+@types/express
+@types/cors
+
+
+###  Create a .env
+```sh
+PORT=5050
+JWT_SECRET=your_secret_key
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=yourpassword
+DB_NAME=portfolio_db
 ```
